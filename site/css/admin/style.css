@@ -1,0 +1,59 @@
+body
+{
+    padding-top: 70px; 
+}
+.login
+{
+	margin-top: 10%;
+	padding: 25px;
+	border : solid #efefef 1px;	
+	box-shadow: 0 0 2px #000000;
+}
+.no-margin
+{
+    margin: 0;
+}
+
+.file_list {
+height: 90%;
+position: fixed;
+border-right: solid #efefef 2px;
+overflow: auto;
+}
+.file_list ul
+{
+    margin-left: 0px;
+}
+#browser
+{
+	background: transparent;
+	padding-left: 10px;
+    padding-top: 15px;
+}
+.tablelist
+{
+	height: auto !important;
+}
+.navbar-collapse.collapse 
+{
+	padding-right: 15px !important;
+}
+.manager_options button
+{
+	margin-right: 10px;
+}
+#resultTable_wrapper
+{
+	overflow: auto;
+}
+.but_group input[type="submit"],.but_group input[type="button"]
+{
+	margin-right: 10px;
+}
+ .modal-body{
+    max-height: 100%;
+}
+@media (max-width:700px)
+{
+	
+}

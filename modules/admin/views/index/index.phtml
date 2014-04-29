@@ -1,0 +1,84 @@
+<?php 
+/*
+$con = new nav_links();
+$con->id="9";
+$con->text="eshant";
+$con->url="gogle";
+$con->bold_text="hiiii";
+$context = new DbContext();
+$context->Add($con); // Insert a new row in table 
+*/
+/*$con->id=9;
+$context = new DbContext();
+$con = $context->Get($con); // 
+print_r($con);
+echo $con->url;*//**/
+/*$con = new nav_links();
+$con->id=9;
+$context = new DbContext();
+$con = $context->Delete($con); // returns the object being deleted 
+
+print_r($con);*/
+/*$con = new nav_links();
+$con->id=9;
+$con->url="eshanrsad";
+$context = new DbContext();
+$con = $context->Update($con); // 
+*/
+//print_r($con);
+$this->appendCSS("style.css");
+$this->partial("h");
+
+
+//echo "i am ";
+$this->appendJS("view.js");
+$this->partial("eshant");
+
+echo "I am from View.";
+?>
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+	<title></title>
+
+	<script type="text/javascript" src="<?php //echo $this->baseurl().'/js/jquery.min.js'; ?>"></script>
+	<script type="text/javascript">
+	//alert(APP_BASE);
+		$.ajax({ url: "<?php //echo $this->appBase().'/default/index/test' ?>",
+         data: {program:"min" },
+         type: 'post',
+         success: function(output) {
+         				alert(output);
+                  }
+});
+
+	</script>
+</head>
+<body>
+<form method="post" action="<?php //echo $this->appBase()."/default/index/test" ?>" >
+	<input type="text" name="name">
+	<input type="submit" value="submit">
+</form>
+</body>
+</html> -->
+
+<?php
+$con = new nav_links();
+//$con->bold_text=1;
+//$con->id=1;
+$context = new DbContext();
+//print_r($context->Get($con));
+$con = $context->Get($con); // returns entity object
+$con = $con->where('$obj->id==1 || $obj->id==2'); // returns entity object
+//print_r($con->toObject()) ;// returns class array
+$dom = new DOMObject();
+$dom->table($con->toArray());
+//print_r($con->toArray()) ; // returns array of array
+/*$mod =$con->where('$obj->id==1 || $obj->text=="About "');
+print_r($mod);*/
+
+
+
+
+?>
+

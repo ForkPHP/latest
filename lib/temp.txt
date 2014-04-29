@@ -1,0 +1,5 @@
+1000 : undefined module or base.php file missing
+1001 :  Controller Class not found
+Err:1002 : undefined Controller
+Err:1003 : Action Undefined
+Err:1004 : missing view file

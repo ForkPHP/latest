@@ -1,0 +1,26 @@
+<?php 
+
+$profile = $this->view['profile'];
+
+?>
+
+<div class="container" style="width:100%;padding:0;">
+	<div class="col-md-12  col-sm-12 ">
+		<h3> User Profile : <?php echo $profile['name']; ?> </h3>
+		<hr/>
+		<div class="col-md-12">
+			<div class="form-group">
+				<label>Name : </label> <?php echo $profile['name']; ?>
+			</div>
+			<div class="form-group">
+				<label>Username : </label> <?php echo $profile['username']; ?>
+			</div>
+			<div class="form-group">
+				<label>Role : </label> <?php echo ($profile['role']==0)?"Front-End User":"Back-End User"; ?>
+			</div>
+			<div class="form-group">
+				<label>Current Token : </label> <?php echo $profile['token']; ?>
+			</div>
+		</div>
+	</div>
+</div>

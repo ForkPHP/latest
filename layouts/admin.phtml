@@ -1,0 +1,240 @@
+<?php
+$this->appendJS("jquery.min.js");
+$this->appendJS("bootstrap.min.js");
+$this->appendJS("jquery.cookie.js");
+$this->appendJS("jquery.treeview.js");
+$this->appendJS("prism.js");
+$this->appendJS("bootbox-4.1.0.min.js");
+$this->appendJS("admin/admin.js");
+$this->appendJS("../edit_area/edit_area_full.js");
+$this->appendCSS("bootstrap.min.css");
+$this->appendCSS("bootstrap-theme.min.css");
+$this->appendCSS("jquery.treeview.css");
+$this->appendCSS("prism.css");
+$this->appendCSS("admin/style.css");
+
+$obj = new adminlayoutController();
+$user = $obj->test();
+//echo $user;
+?>
+<script language="Javascript" type="text/javascript">
+    // initialisation
+    var APP_BASE="<?php echo $this->appBase(); ?>";
+    editAreaLoader.init({
+      id: "sourceeditor" // id of the textarea to transform  
+      ,start_highlight: true
+      ,allow_toggle: false
+      ,language: "en"
+      ,syntax: "html" 
+      ,toolbar: "search, go_to_line, |, undo, redo, |, select_font, |, syntax_selection, |, change_smooth_selection, highlight, reset_highlight, |, help"
+      ,syntax_selection_allow: "css,html,js,php,python,vb,xml,c,cpp,sql,basic,pas,brainfuck"
+      ,is_multi_files: true
+      ,EA_load_callback: "editAreaLoaded"
+      ,show_line_colors: true
+    });
+    
+  
+    // callback functions
+    function my_save(id, content){
+      alert("Here is the content of the EditArea '"+ id +"' as received by the save callback function:\n"+content);
+    }
+    
+    function my_load(id){
+      editAreaLoader.setValue(id, "The content is loaded from the load_callback function into EditArea");
+    }
+    
+    function test_setSelectionRange(id){
+      editAreaLoader.setSelectionRange(id, 100, 150);
+    }
+    
+    function test_getSelectionRange(id){
+      var sel =editAreaLoader.getSelectionRange(id);
+      alert("start: "+sel["start"]+"\nend: "+sel["end"]); 
+    }
+    
+    function test_setSelectedText(id){
+      text= "[REPLACED SELECTION]"; 
+      editAreaLoader.setSelectedText(id, text);
+    }
+    
+    function test_getSelectedText(id){
+      alert(editAreaLoader.getSelectedText(id)); 
+    }
+    
+    function editAreaLoaded(id){
+      if(id=="sourceeditor")
+      {
+        open_file1();
+        open_file2();
+      }
+    }
+    
+    function open_file1()
+    {
+      var new_file= {id: "to\\ é # € to", text: "$authors= array();\n$news= array();", syntax: 'php', title: 'beautiful title'};
+      editAreaLoader.openFile('sourceeditor', new_file);
+    }
+    
+    function open_file2()
+    {
+      var new_file= {id: "Filename", text: "<a href=\"toto\">\n\tbouh\n</a>\n<!-- it's a comment -->", syntax: 'html'};
+      editAreaLoader.openFile('sourceeditor', new_file);
+    }
+    
+    function close_file1()
+    {
+      editAreaLoader.closeFile('sourceeditor', "to\\ é # € to");
+    }
+    function add()
+    {
+      var new_file= {id: "my", text: "<a href=\"toto\">\n\tbouh\n</a>\n<!-- it's a comment -->", syntax: 'html'};
+      editAreaLoader.openFile('sourceeditor', new_file);
+
+    }
+    function toogle_editable(id)
+    {
+      editAreaLoader.execCommand(id, 'set_editable', !editAreaLoader.execCommand(id, 'is_editable'));
+    }
+  
+  </script>
+<nav role="navigation" class="navbar navbar-default navbar-fixed-top" style="margin-bottom:0px;">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+    <button data-target=".navbar-ex1-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a href="<?php echo $this->appBase().'/admin/home'; ?>" class="navbar-brand">Fork PHP Admin</a>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse navbar-ex1-collapse">
+
+    <ul class="nav navbar-nav navbar-left navbar-user">
+      <li class=""><a href="<?php echo $this->appBase().'/admin/home/editor';?>">Code Editor</a></li>
+      <li class="dropdown">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">My Tools <b class="caret"></b></a>
+          <ul class="dropdown-menu">
+            <li><a href="<?php echo $this->appBase().'/admin/entity';?>">Entity Class Generator</a></li>
+            <li><a href="<?php echo $this->appBase().'/admin/entity/dbmanager';?>">DB Manager</a></li>
+           <!--  <li><a href="#">Something else here</a></li>
+           <li class="divider"></li>
+           <li><a href="#">Separated link</a></li> -->
+            <li class="divider"></li>
+            <li><a href="http://www.forkphp.com/document" target="_blank">Browse Documentation</a></li>
+          </ul>
+        </li>
+    </ul>
+
+    <ul class="nav navbar-nav navbar-right navbar-user">
+
+     <!--  <li class="dropdown messages-dropdown">
+       <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="fa fa-envelope"></i> Messages <span class="badge">7</span> <b class="caret"></b></a>
+       <ul class="dropdown-menu">
+         <li class="dropdown-header">7 New Messages</li>
+         <li class="message-preview">
+           <a href="#">
+             <span class="avatar"><img src=""></span>
+             <span class="name">Eshant Sahu:</span>
+             <span class="message">Hey there, I wanted to ask you something...</span>
+             <span class="time"><i class="fa fa-clock-o"></i> 4:34 PM</span>
+           </a>
+         </li>
+         <li class="divider"></li>
+         <li class="message-preview">
+           <a href="#">
+             <span class="avatar"><img src=""></span>
+             <span class="name">John Smith:</span>
+             <span class="message">Hey there, I wanted to ask you something...</span>
+             <span class="time"><i class="fa fa-clock-o"></i> 4:34 PM</span>
+           </a>
+         </li>
+         <li class="divider"></li>
+         <li class="message-preview">
+           <a href="#">
+             <span class="avatar"><img src=""></span>
+             <span class="name">John Smith:</span>
+             <span class="message">Hey there, I wanted to ask you something...</span>
+             <span class="time"><i class="fa fa-clock-o"></i> 4:34 PM</span>
+           </a>
+         </li>
+         <li class="divider"></li>
+         <li><a href="#">View Inbox <span class="badge">7</span></a></li>
+       </ul>
+     </li> -->
+
+      <li class="dropdown user-dropdown">
+        <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="fa fa-user"></i> <label id='userName'>User Name</label> <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="<?php echo $this->appBase().'/admin/profile'; ?>"><i class="fa fa-user"></i> Profile</a></li>
+         <!--  <li><a href="#"><i class="fa fa-envelope"></i> Inbox <span class="badge">7</span></a></li> -->
+          <li><a href="<?php echo $this->appBase().'/admin/settings'; ?>"><i class="fa fa-gear"></i> Settings</a></li>
+          <li class="divider"></li>
+          <li><a href="<?php echo $this->appBase().'/admin/home/logout'; ?>"><i class="fa fa-power-off"></i> Log Out</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div><!-- /.navbar-collapse -->
+</nav>
+<div class="row" style="padding:0;width:100%; margin-top: -20px;">
+  
+      <div class="col-md-2 col-sm-3 col-xs-12 file_list">
+        
+        <?php
+          function ListFolder($path)
+          {
+              //using the opendir function
+              $dir_handle = @opendir($path) or die("Unable to open $path");
+             
+              //Leave only the lastest folder name
+              $dirname = @end(explode("/", $path));
+              
+              //display the target folder.
+              echo ("<li class='closed'><span class='folder'>$dirname</span>\n");
+              echo "<ul>\n";
+              while (false !== ($file = readdir($dir_handle)))
+              {
+                  if($file!="." && $file!="..")
+                  {
+                      if (is_dir($path."/".$file))
+                      {
+                          //Display a list of sub folders.
+                          ListFolder($path."/".$file);
+                      }
+                      else
+                      {
+                          //Display a list of files.
+                          echo "<li><span class='file'>$file</span></li>";
+                      }
+                  }
+              }
+              echo "</ul>\n";
+              echo "</li>\n";
+             
+              //closing the directory
+              closedir($dir_handle);
+          }
+          echo "<ul id='browser' class='filetree'>";
+      ListFolder($_SERVER['DOCUMENT_ROOT']."//".$GLOBALS['host']);
+      echo "</ul>";
+        ?>
+      </div>
+      <div class="col-md-10 col-md-offset-2 col-sm-9 col-sm-offset-3 col-xs-12 ">
+        <?php $this->view(); ?>
+      </div>
+  
+</div>
+<script>
+ $.ajax({
+       type: "POST",
+       url: "<?php echo $this->appBase().'/admin/profile/getProfile'; ?>",
+       success: function(jdata)
+       {
+        var data = $.parseJSON(jdata);
+        $("#userName").text(data['name']);
+        
+       }
+    }); 
+</script>

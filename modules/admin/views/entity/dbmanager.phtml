@@ -1,0 +1,432 @@
+<?php
+
+$this->appendCSS("../datatables/datatables.bootstrap.css");
+$this->appendJS("../datatables/js/jquery.dataTables.min.js");
+$this->appendJS("../datatables/datatables.bootstrap.js");
+ ?>
+<div class="col-md-12  col-sm-12 ">
+	<form class="navbar-form navbar-right" action="<?php echo $this->appBase().'/admin/entity/dbmanager'; ?>" role="search">
+	<a href="<?php echo $this->appBase().'/admin/entity/logout'; ?>" class="btn btn-info">Logout (Logged in as <?php echo $_SESSION['mysql_username']; ?>)</a>
+	</form>
+	<br style="clear:both;">
+	<div class="col-md-7 col-sm-10 col-xs-10 cont">
+		<h3>DB Manager</h3>
+		<br/>
+		
+			<form method="get">
+			<div class="form-group col-md-7 col-sm-7" >
+		    <label for="dbname" >Chose Database</label>
+		    <select class="form-control" id="dbname" name="db">
+		    <?php 
+		    	foreach ($this->view['dblist'] as $value) {
+
+		    		if($this->view['current']==$value)
+		    		{
+						
+		    			$sel = "selected";
+		    		}
+		    		else
+		    		{
+		    			$sel ="";
+		    		}
+		    	echo "<option value=$value $sel>".$value."</option>";
+		    	}
+		    ?>
+			</select>
+			</div>
+			<div class="col-md-5 col-sm-5 col-xs-2 but_group" style="padding-top:24px;">
+
+				<input type="submit" class="btn btn-primary" style="float:left;" value="Submit" id="loadTables">
+				<?php if(isset($this->view['current']))
+						{?>
+				<input type="button" class="btn btn-success" style="float:left;" value="New Query" data-toggle="modal" data-target="#queryModal">
+				<?php } ?>
+				<div style="clear:both;"></div>
+			</div>
+			</form>
+			
+		
+
+	</div>
+	<div class="col-md-10 col-sm-10 col-xs-10 cont" style="overflow:auto;">
+	<br/>
+		<?php
+		echo "<script type='text/javascript'>
+								$(document).ready(function(){
+
+									$('#resultTable').dataTable();
+								});
+							 </script>";
+				if(isset($this->view['tabledata']))
+				{
+					echo "<div class='form-group'>";
+					echo "<h4>".$this->view['tabledata'][0]."</h4>";
+					if(count($this->view['tabledata'][1])>0)
+					{
+						//int_r($this->view['tabledata'][1]);die;
+						echo "<table id='resultTable' class='table table-bordered table-hover table-striped table-responsive' >
+							<thead>
+							<tr>
+							<th>
+							<input type='checkbox' id='checkAll' />
+							</th>";
+						foreach ($this->view['tabledata'][1][0] as $key => $value) {
+							echo "<th> $key</th>";
+						}
+						echo "<th>Action</th></tr></thead>";
+						foreach ($this->view['tabledata'][1] as $row)
+						{
+							echo "<tr><td><input type='checkbox' id='chk_'></td>";
+							$id="-";
+							foreach ($row as $key => $value) 
+							{
+								if($key=="id")
+								{
+									$id=$value;
+								}
+								echo "<td> $value </td>";
+							}
+							$del=$this->appBase().'/admin/entity/deleteRow/db/'.$this->view['current'].'/table/'.$this->view['tabledata'][0].'/id/'.$id;
+							$update=$id;
+							echo "<td><a class='update_but' href='javascript:void(0)' rel='".$update."'><span class='glyphicon glyphicon-edit'></span></a> &nbsp;&nbsp; <a href='".$del."'><span class='glyphicon glyphicon-trash'></span></a></td></tr>";
+						}
+						echo "</table>";
+					?>
+					<script type="text/javascript">
+					$('.update_but').click(function(){
+						$("#editModal").modal('show');
+						var id=$(this).attr("rel");
+						var table = "<?php echo $this->view['tabledata'][0]; ?>";
+						var db = "<?php echo $this->view['current']; ?>";
+						//alert(table+db);
+						$.ajax({
+						   type: "POST",
+						   data: {db:db,table:table,id:id},
+						   url: "<?php echo $this->appBase().'/admin/entity/getRow' ?>",
+						   success: function(data)
+						   {
+						   	data = $.parseJSON(data);
+						   	var i=0;
+							$('#editModal input[type="text"]').each(function()
+							{
+							  $(this).val(data[i]);
+							  
+							  i++;
+							});
+							}
+							});
+							$("#rowID").val(id);
+						   
+						});
+
+
+					</script>
+					<?php	
+					}
+					else
+					{
+						echo "<p>This Table is Empty.</p>";
+					}
+					?>
+					<div class="modal fade" id="editModal" tabindex="-1" role="dialog" aria-labelledby="editModalLabel" aria-hidden="true">
+					  <div class="modal-dialog">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					        <h4 class="modal-title" id="editModalLabel"><?php echo "Update Row : ".$this->view['tabledata'][0]; ?></h4>
+					      </div>
+					      <div class="modal-body">
+					      	<form>
+					      	
+					      		<?php
+					      		 foreach ($this->view['tabledata'][2] as  $column)
+					      		 {
+					      		 	if($column == "id")
+					      		 	{
+					      		 		$disable ="disabled";
+					      		 	}
+					      		 	else
+					      		 	{
+					      		 		$disable ="";
+					      		 	}
+						      		 	echo "<div class='form-group'>";
+						      		 	echo "<input type='text' class='form-control tab_cols' rel='".$column."' placeholder='".$column."' $disable />";
+						      		 	echo "</div>";
+					      			
+					      		 }
+					      		?>
+					      		<input type="hidden" id="rowID">
+					      	</form>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" id="updateRow" class="btn btn-primary">Update</button>
+					        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>			
+					      </div>
+					    </div>
+					  </div>
+					</div>
+					<div class="modal fade" id="insertModal" tabindex="-1" role="dialog" aria-labelledby="insertModalLabel" aria-hidden="true">
+					  <div class="modal-dialog">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					        <h4 class="modal-title" id="insertModalLabel"><?php echo "Add Row : ".$this->view['tabledata'][0]; ?></h4>
+					      </div>
+					      <div class="modal-body">
+					      	<form>
+					      	
+					      		<?php
+					      		 foreach ($this->view['tabledata'][2] as  $column)
+					      		 {
+					      		 	if($column != "id")
+					      		 	{
+						      		 	echo "<div class='form-group'>";
+						      		 	echo "<input type='text' class='form-control tab_cols' rel='".$column."' placeholder='".$column."' />";
+						      		 	echo "</div>";
+					      			}
+					      		 }
+					      		?>
+					      		
+					      	</form>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" id="insertRow" class="btn btn-primary">Insert</button>
+					        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>			
+					      </div>
+					    </div>
+					  </div>
+					</div>
+					<div class="modal fade" id="tableModal" tabindex="-1" role="dialog" aria-labelledby="tableModalLabel" aria-hidden="true">
+					  <div class="modal-dialog">
+					    <div class="modal-content">
+					      <div class="modal-header">
+					        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					        <h4 class="modal-title" id="tableModalLabel"><?php echo "Add Table : "; ?></h4>
+					      </div>
+					      <div class="modal-body">
+					      	<form id="tableform">
+					      	
+						      	
+						      	<div class='form-group'>
+						      		<textarea class="form-control" style="min-height:120px;resize:vertical;" id="query">CREATE TABLE IF NOT EXISTS TABLE_NAME (id int(100) NOT NULL AUTO_INCREMENT,COL2 DATATYPE, PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=1 ;</textarea>
+								</div>
+					      		
+					      	</form>
+					      </div>
+					      <div class="modal-footer">
+					        <button type="button" id="AddTable" class="btn btn-primary">Create</button>
+					        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>			
+					      </div>
+					    </div>
+					  </div>
+					</div>
+					<script type="text/javascript">
+					$("#insertRow").click(function()
+					{
+						var cols = {};
+						$(".tab_cols").each(function(){
+							var name = $(this).attr('rel');
+							cols[name]= $(this).val();
+						});
+						var table = "<?php echo $this->view['tabledata'][0]; ?>";
+						var db = "<?php echo $this->view['current']; ?>";
+						//alert(table+db);
+						$.ajax({
+						   type: "POST",
+						   data: {cols:JSON.stringify(cols),db:db,table:table},
+						   url: "<?php echo $this->appBase().'/admin/entity/insertRow' ?>",
+						   success: function(msg)
+						   {
+						   	$('#insertModal').modal('hide');
+							bootbox.alert(msg,function(){location.reload();});
+							
+						   }
+						});
+
+					});
+						$("#AddTable").click(function()
+						{
+							var query = $("textarea#query").val();
+							var db = "<?php echo $this->view['current']; ?>";
+							$.ajax({
+							   type: "POST",
+							   data: {db:db,table:query},
+							   url: "<?php echo $this->appBase().'/admin/entity/createTable' ?>",
+							   success: function(msg)
+							   {
+							   	$('#tableModal').modal('hide');
+								bootbox.alert(msg,function(){location.reload();});
+								
+							   }
+							});
+
+						});
+						$("#updateRow").click(function(){
+						var cols = {};
+						$("#editModal .tab_cols").each(function(){
+							var name = $(this).attr('rel');
+							cols[name]= $(this).val();
+						});
+						var table = "<?php echo $this->view['tabledata'][0]; ?>";
+						var db = "<?php echo $this->view['current']; ?>";
+						var id = $("#rowID").val();
+						$.ajax({
+						   type: "POST",
+						   data: {cols:JSON.stringify(cols),db:db,table:table,id:id},
+						   url: "<?php echo $this->appBase().'/admin/entity/updateRow' ?>",
+						   success: function(msg)
+						   {
+						   	$('#editModal').modal('hide');
+							bootbox.alert(msg,function(){location.reload();});
+							
+						   }
+						});
+					});
+
+					</script>
+					
+
+			<br/>
+			<div class="manager_options">
+			<button class="btn btn-info"  style="float:left;" data-toggle="modal" data-target="#insertModal"> <span class='glyphicon glyphicon-plus-sign'></span> Add Row</button>
+			
+			<button class="btn btn-success" data-toggle="modal" data-target="#tableModal" style="float:left;"> <span class="glyphicon glyphicon-plus"></span> Add Table </button>
+			<button class="btn btn-success" style="float:left;" id="dropTable"> <span class="glyphicon glyphicon-trash"></span> Drop Table </button>
+			</div>
+			<br style="clear:both;" />
+			<?php
+					
+				}
+			?>
+
+	</div>
+</div>
+<div class="modal fade" id="queryModal" tabindex="-1" role="dialog" aria-labelledby="queryModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="queryModalLabel"><?php echo "Query : ".$this->view['current']; ?></h4>
+      </div>
+      <div class="modal-body">
+      		<div class='form-group'>
+      		<p>Write Your Query :</p>
+	      		<textarea class="form-control" style="min-height:120px;resize:vertical;" id="queryText"></textarea>
+			</div>
+			<div class="queryResults">
+
+			</div>
+			<div class="col-md-12" id="queryData">
+			</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="execQuery" class="btn btn-primary">Execute</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>			
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+<?php 
+if(isset($this->view['tabledata']))
+{ ?>
+	$("#dropTable").click(function()
+	{
+		bootbox.confirm("Are you sure to drop table <?php echo $this->view['tabledata'][0]; ?> ?", function(result) {
+		if(result)
+		{
+			var table = "<?php echo $this->view['tabledata'][0]; ?>";
+			var db = "<?php echo $this->view['current']; ?>";
+			$.ajax({
+			   type: "POST",
+			   data: {db:db,table:table},
+			   url: "<?php echo $this->appBase().'/admin/entity/dropTable' ?>",
+			   success: function(msg)
+			   {
+			   	bootbox.alert(msg,function(){window.location.href="<?php echo $this->appBase().'/admin/entity/dbmanager?db='; ?>"+db});
+			   }
+			});
+		}
+
+		}); 
+
+	});	
+	<?php 
+}
+?>
+	$("#execQuery").click(function()
+	{
+		var query = $("textarea#queryText").val();
+		var db = "<?php echo $this->view['current']; ?>";
+		$.ajax({
+		   type: "POST",
+		   data: {db:db,query:query},
+		   url: "<?php echo $this->appBase().'/admin/entity/execQuery' ?>",
+		   success: function(jdata)
+		   {
+		   	var data = $.parseJSON(jdata);
+		   	if(data['error']==1)
+		   	{
+		   		bootbox.alert(data['msg']);
+		   	}
+		   	else
+		   	{
+		   		    list = data['data'];
+                    header = list[0];
+                    str = "<table class='table table-striped' id='queryresultTable'><tr>";
+                    for(item in header)
+                        str+="<th>"+item;
+                    
+                    for(i=0; i<list.length; i++)
+                    {
+                        col = list[i];
+                        console.log(col);
+                        str+="<tr>";
+                        for(item in col)
+                        {
+
+                            str+="<td>"+col[item];
+                        }
+                    }
+                    str+="</table>";
+                    if(list['count']>10)
+                    {
+                        str+="Showing 10 rows of "+list;
+                    }
+                    $("#queryData").html(str);
+                    $("#queryData").parent().parent().parent().css("width","auto");
+		   	}
+		   }
+		});
+	});
+
+</script>
+<?php
+if(isset($this->view['tables']))
+{
+	$path = $this->appBase().'/admin/entity/dbmanager?db='.$this->view['current'].'&table=';
+	$html = "<h3 style='text-align:center;'>Tables</h3><div class='list-group'>";
+	foreach ($this->view['tables'] as  $value) {
+	$html .="<a href='".$path.$value."' class='list-group-item'> $value </a>";
+}
+$html .="</div>";
+                      //echo $html;
+echo "<script type='text/javascript'>
+		$('.file_list').html(\"$html\");
+		$('.file_list').css({'padding-left':'18px',
+	    'padding-right': '2px'});
+	</script>";
+
+}
+
+?>
+<?php 
+$msg = $this->get('msg');
+if(!empty($msg))
+{
+	echo "<script> bootbox.alert('".base64_decode($msg)."',function(){ 
+		window.location.href='".$this->appBase().'/admin/entity/dbmanager?db='.$this->view['current'].'&table='.$this->view['tabledata'][0]."';
+	})</script>";
+}
+
+?>

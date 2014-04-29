@@ -1,0 +1,86 @@
+<?php
+$this->appendJS("jquery.min.js");
+$this->appendJS("bootstrap.min.js");
+$this->appendJS("jquery.cookie.js");
+$this->appendJS("jquery.treeview.js");
+$this->appendJS("prism.js");
+$this->appendJS("bootbox-4.1.0.min.js");
+
+$this->appendJS("admin/admin.js");
+//$this->appendJS("../edit_area/edit_area_full.js");
+$this->appendCSS("bootstrap.min.css");
+$this->appendCSS("bootstrap-theme.min.css");
+$this->appendCSS("jquery.treeview.css");
+$this->appendCSS("prism.css");
+$this->appendCSS("admin/style.css");
+
+//echo $user;
+?>
+
+<nav role="navigation" class="navbar navbar-default navbar-fixed-top" style="margin-bottom:0px;">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+    <button data-target=".navbar-ex1-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a href="<?php echo $this->appBase().'/admin/home'; ?>" class="navbar-brand">Fork PHP Front End</a>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <div class="collapse navbar-collapse navbar-ex1-collapse">
+
+
+
+    <ul class="nav navbar-nav navbar-right navbar-user">
+
+      
+<!--       <li class="dropdown alerts-dropdown">
+        <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="fa fa-bell"></i> Alerts <span class="badge">3</span> <b class="caret"></b></a>
+        <ul class="dropdown-menu">
+          <li><a href="#">Default <span class="label label-default">Default</span></a></li>
+          <li><a href="#">Primary <span class="label label-primary">Primary</span></a></li>
+          <li><a href="#">Success <span class="label label-success">Success</span></a></li>
+          <li><a href="#">Info <span class="label label-info">Info</span></a></li>
+          <li><a href="#">Warning <span class="label label-warning">Warning</span></a></li>
+          <li><a href="#">Danger <span class="label label-danger">Danger</span></a></li>
+          <li class="divider"></li>
+          <li><a href="#">View All</a></li>
+        </ul>
+      </li> -->
+      <li class="dropdown user-dropdown">
+      <a href="<?php echo $this->appBase().'/default/home/logout'; ?>"><i class="fa fa-power-off"></i> Log Out</a>
+        <!-- <a data-toggle="dropdown" class="dropdown-toggle" href="#"><i class="fa fa-user"></i> <b class="caret"></b></a> -->
+        <!-- <ul class="dropdown-menu">
+          <li><a href="#"><i class="fa fa-user"></i> Profile</a></li>
+          <li><a href="#"><i class="fa fa-envelope"></i> Inbox <span class="badge">7</span></a></li>
+          <li><a href="<?php //echo $this->appBase().'/admin/settings'; ?>"><i class="fa fa-gear"></i> Settings</a></li>
+          <li class="divider"></li>
+          <li></li>
+        </ul> -->
+      </li>
+    </ul>
+  </div><!-- /.navbar-collapse -->
+</nav>
+<div class="row" style="padding:0;width:100%; margin-top: -20px;">
+  
+      
+      <div class="col-md-12  col-sm-12  col-xs-12 ">
+        <?php $this->view(); ?>
+      </div>
+  
+</div>
+<script>
+ $.ajax({
+       type: "POST",
+       url: "<?php echo $this->appBase().'/admin/profile/getProfile'; ?>",
+       success: function(jdata)
+       {
+        var data = $.parseJSON(jdata);
+        $("#userName").text(data['name']);
+        
+       }
+    }); 
+</script>

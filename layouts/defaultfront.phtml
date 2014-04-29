@@ -1,0 +1,36 @@
+<?php
+  $this->appendJS("jquery.min.js");
+  $this->appendJS("bootstrap.min.js");
+  $this->appendJS("forklib.js");
+  $this->appendCSS("bootstrap.min.css");
+  $this->appendCSS("bootstrap-theme.min.css");
+  $this->appendCSS("default/style.css");
+  $iconPath= $this->baseUrl().'/img/icon.png';
+  $this->headString("<link rel='icon' href=$iconPath type='image/x-icon'>"); // set icon
+
+?>
+
+  <header role="banner" id="top" class="navbar navbar-static-top bs-docs-nav" style="background:white;">
+  <div class="container">
+    <div class="navbar-header">
+      <button data-target=".bs-navbar-collapse" data-toggle="collapse" type="button" class="navbar-toggle">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="<?php echo $this->appBase(); ?>">Fork PHP</a>
+    </div>
+    <nav role="navigation" class="collapse navbar-collapse bs-navbar-collapse">
+      <ul class="nav navbar-nav">
+        
+        
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a  href="<?php echo $this->appBase().'/default/accounts/login'; ?>">Login</a></li>
+        <li><a  href="<?php echo $this->appBase().'/default/accounts/create'; ?>">SignUp</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+<?php $this->view(); ?> 

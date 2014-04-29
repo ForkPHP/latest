@@ -1,0 +1,58 @@
+body
+{
+	background: url("../../img/intro-bg.jpg") !important;
+}
+.login
+{
+	margin-top: 5%;
+	padding: 25px;
+    background: white;
+	border : solid #efefef 1px;	
+	box-shadow: 0 0 2px #000000;
+}
+.bs-docs-masthead, .bs-docs-header {
+    /*background-color: #6F5499;*/
+    /*background-image: linear-gradient(to bottom, #563D7C 0px, #6F5499 100%);*/
+    background-repeat: repeat-x;
+    color: #CDBFE3;
+    padding: 30px 15px;
+    position: relative;
+    text-align: center;
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+.bs-docs-masthead .bs-docs-booticon {
+    margin: 0 auto 30px;
+}
+.bs-docs-booticon-outline {
+    background-color: rgba(0, 0, 0, 0);
+    
+}
+.bs-docs-booticon-lg {
+    font-size: 80px;
+    height: 144px;
+    line-height: 140px;
+    
+}
+.bs-docs-booticon {
+    
+    
+    color: #FFFFFF;
+    cursor: default;
+    display: block;
+    font-weight: 500;
+    text-align: center;
+}
+.btn-outline-inverse {
+    background-color: #C2C2C2;
+    border-color: #CDBFE3;
+    color: #FFFFFF;
+    opacity: 0.9;
+}
+.lead
+{
+	color:#CBCBCB !important;
+}
+.icon-bar
+{
+	background: #428BCA !important;
+}
