@@ -9,9 +9,8 @@ if(!empty($msg))
 }
 
 ?>
-	<div class="col-md-4"></div>
-	<div class="login col-md-4 ">
-	<h3> <img src="<?php echo $this->baseUrl().'/img/user.png'; ?>"> Fork PHP : Front End Login</h3>
+	<div class="login col-md-4 col-md-offset-4  col-sm-offset-3 col-sm-6 col-xs-9 col-xs-offset-1 ">
+	<h3> <img src="<?php echo $this->baseUrl().'/img/user.png'; ?>"> <?php echo APP_NAME;?> :  Login</h3>
 	<form role="form" method="post" action="<?php echo $this->appBase().'/default/accounts/processlogin'; ?>">
 	  <div class="form-group">
 	    <label for="username">Email address</label>
@@ -34,5 +33,5 @@ if(!empty($msg))
 
 	?>
 	</div>
-	<div class="col-md-4"></div>
+
 </div>

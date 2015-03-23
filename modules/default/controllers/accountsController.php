@@ -36,7 +36,8 @@
 			
 			$username=$this->post('username');
 			$password=$this->post('password');
-			//echo $username.$password;die;
+			$this->viewRequired=false;
+			$this->layoutRequired=false;
 			$modal = new Model_Default();
 			$result =  $modal->processLogin($username,$password);
 			//echo $result;die;
@@ -116,5 +117,3 @@
 		}
 		
 	}
-
-

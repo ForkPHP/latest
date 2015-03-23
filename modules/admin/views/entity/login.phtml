@@ -2,14 +2,36 @@
 <div class="login col-md-6 col-md-offset-3">
 	<h3> <img src="<?php echo $this->baseUrl().'/img/user.png'; ?>"> Fork PHP : Mysql Login</h3>
 	<form role="form" method="post" action="<?php echo $this->appBase().'/admin/entity/mysqllogin'; ?>">
-	  <div class="form-group">
-	    <label for="username"> Username</label>
-	    <input type="text" class="form-control" id="username" name="username" placeholder="Username"> 
+	  <div class="col-md-12">
+	  	  <div class="form-group">
+		    <label for="username"> Username</label>
+		    <input type="text" class="form-control" id="username" name="username" placeholder="Username"> 
+		  </div>
+		  <div class="form-group">
+		    <label for="password">Password</label>
+		    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+		    <input type="hidden" name='return' value="<?php echo $this->get('return');?>">
+		  </div>
 	  </div>
-	  <div class="form-group">
-	    <label for="password">Password</label>
-	    <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+	  <h4 align="center">OR</h4>
+	  <div class="col-md-12">
+	  		<div class="form-group">
+		    <label for="password">Login Using</label>
+		    
+		    <select class="form-control" name="login_db">
+		    	<option value='0'>Select DB</option>
+		    	<?php 
+
+		    		foreach (explode(",", $this->view['db']['names']) as $db) {
+		    			echo "<option value=".$db.">".$db."</option>";
+		    		}
+		    	?>
+		    </select>
+		  </div>
 	  </div>
+	  <div class="clearfix"></div>
+	  
+
 	  <button type="submit" class="btn btn-primary">Submit</button>
 	  
 	</form>

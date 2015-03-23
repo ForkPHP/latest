@@ -4,23 +4,30 @@ $this->appendCSS("../datatables/datatables.bootstrap.css");
 $this->appendJS("../datatables/js/jquery.dataTables.min.js");
 $this->appendJS("../datatables/datatables.bootstrap.js");
  ?>
-<div class="col-md-12  col-sm-12 ">
+ <script type="text/javascript">
+$(document).ready(function(){
+
+	$('#queryresultTable').dataTable();
+});
+ </script>
+<div class="col-md-12  col-sm-12 "  style="position:relative;">
+<div style="position:absolute;right:0;margin-top:10px;">
 	<form class="navbar-form navbar-right" action="<?php echo $this->appBase().'/admin/entity/dbmanager'; ?>" role="search">
 	<a href="<?php echo $this->appBase().'/admin/entity/logout'; ?>" class="btn btn-info">Logout (Logged in as <?php echo $_SESSION['mysql_username']; ?>)</a>
 	</form>
-	<br style="clear:both;">
+	</div>
+	<h3>DB Manager</h3>
+	<hr/>
 	<div class="col-md-7 col-sm-10 col-xs-10 cont">
-		<h3>DB Manager</h3>
-		<br/>
 		
-			<form method="get">
+			<form method="get" action="<?php echo $this->appBase().'/admin/entity/dbmanager';?>">
 			<div class="form-group col-md-7 col-sm-7" >
 		    <label for="dbname" >Chose Database</label>
 		    <select class="form-control" id="dbname" name="db">
 		    <?php 
 		    	foreach ($this->view['dblist'] as $value) {
 
-		    		if($this->view['current']==$value)
+		    		if(isset($this->view['current']) && $this->view['current']==$value)
 		    		{
 						
 		    			$sel = "selected";
@@ -51,16 +58,12 @@ $this->appendJS("../datatables/datatables.bootstrap.js");
 	<div class="col-md-10 col-sm-10 col-xs-10 cont" style="overflow:auto;">
 	<br/>
 		<?php
-		echo "<script type='text/javascript'>
-								$(document).ready(function(){
-
-									$('#resultTable').dataTable();
-								});
-							 </script>";
+				
 				if(isset($this->view['tabledata']))
 				{
+					
 					echo "<div class='form-group'>";
-					echo "<h4>".$this->view['tabledata'][0]."</h4>";
+					echo "<h4> Table Name : ".$this->view['tabledata'][0]."</h4><br/>";
 					if(count($this->view['tabledata'][1])>0)
 					{
 						//int_r($this->view['tabledata'][1]);die;
@@ -76,30 +79,81 @@ $this->appendJS("../datatables/datatables.bootstrap.js");
 						echo "<th>Action</th></tr></thead>";
 						foreach ($this->view['tabledata'][1] as $row)
 						{
+							$updateMod = json_encode($row);
 							echo "<tr><td><input type='checkbox' id='chk_'></td>";
 							$id="-";
 							foreach ($row as $key => $value) 
 							{
+								//$updateMod[$key]=$value;
 								if($key=="id")
 								{
 									$id=$value;
 								}
 								echo "<td> $value </td>";
 							}
-							$del=$this->appBase().'/admin/entity/deleteRow/db/'.$this->view['current'].'/table/'.$this->view['tabledata'][0].'/id/'.$id;
+							/*if($id=='-')
+							{
+								echo "<td>NA</td></tr>";
+							}
+							else*/
+							{
+							//$del=$this->appBase().'/admin/entity/deleteRow/db/'.$this->view['current'].'/table/'.$this->view['tabledata'][0].'/data/'.base64_encode($updateMod);
 							$update=$id;
-							echo "<td><a class='update_but' href='javascript:void(0)' rel='".$update."'><span class='glyphicon glyphicon-edit'></span></a> &nbsp;&nbsp; <a href='".$del."'><span class='glyphicon glyphicon-trash'></span></a></td></tr>";
+							//echo "<td><a class='update_but' href='javascript:void(0)' rel='".$update."'><span class='glyphicon glyphicon-edit'></span></a> &nbsp;&nbsp; <a href='".$del."'><span class='glyphicon glyphicon-trash'></span></a></td></tr>";
+							echo "<td><a class='update_but' href='javascript:fillRow(".$updateMod.")' rel='".$update."'><span class='glyphicon glyphicon-edit'></span></a> &nbsp;&nbsp; <a href='javascript:deleteRow(".$updateMod.")'><span class='glyphicon glyphicon-trash'></span></a></td></tr>";
+							}
 						}
 						echo "</table>";
+						/*echo "<script type='text/javascript'>
+								$(document).ready(function(){
+
+									$('#resultTable').dataTable();
+								});
+							 </script>";*/
 					?>
 					<script type="text/javascript">
+					function fillRow(row)
+					{
+						/*alert(row)
+						row = row.trim();
+						var obj = $.parseJSON(row);*/
+
+						for (var key in row)
+						{
+							$("#col_"+key).val(row[key]);
+							$("#actual_"+key).val(row[key]);
+						};
+					}
+					function deleteRow(row)
+					{
+						row = JSON.stringify(row);
+						var table = "<?php echo $this->view['tabledata'][0]; ?>";
+						var db = "<?php echo $this->view['current']; ?>";
+						bootbox.confirm("Are you sure to Delete Row ?", function(result) 
+							{
+								if(result)
+								{
+									$.ajax({
+									   type: "POST",
+									   data: {db:db,table:table,data:row},
+									   url: "<?php echo $this->appBase().'/admin/entity/deleteRow' ?>",
+									   success: function(data)
+									   {
+									   	bootbox.alert(data,function(){location.reload();});
+									   }
+									});
+								}
+
+							}); 
+						
+					}
 					$('.update_but').click(function(){
 						$("#editModal").modal('show');
 						var id=$(this).attr("rel");
 						var table = "<?php echo $this->view['tabledata'][0]; ?>";
 						var db = "<?php echo $this->view['current']; ?>";
 						//alert(table+db);
-						$.ajax({
+						/*$.ajax({
 						   type: "POST",
 						   data: {db:db,table:table,id:id},
 						   url: "<?php echo $this->appBase().'/admin/entity/getRow' ?>",
@@ -114,8 +168,8 @@ $this->appendJS("../datatables/datatables.bootstrap.js");
 							  i++;
 							});
 							}
-							});
-							$("#rowID").val(id);
+							});*/
+							//$("#rowID").val(id);
 						   
 						});
 
@@ -150,7 +204,8 @@ $this->appendJS("../datatables/datatables.bootstrap.js");
 					      		 		$disable ="";
 					      		 	}
 						      		 	echo "<div class='form-group'>";
-						      		 	echo "<input type='text' class='form-control tab_cols' rel='".$column."' placeholder='".$column."' $disable />";
+						      		 	echo "<input type='text' class='form-control tab_cols updated' rel='".$column."' id='col_".$column."' placeholder='".$column."' $disable />";
+						      		 	echo "<input type='hidden' class='form-control tab_cols actual' rel='".$column."' id='actual_".$column."' placeholder='".$column."' $disable />";
 						      		 	echo "</div>";
 					      			
 					      		 }
@@ -262,22 +317,38 @@ $this->appendJS("../datatables/datatables.bootstrap.js");
 
 						});
 						$("#updateRow").click(function(){
-						var cols = {};
+						var actual = {};
+						var updated = {};
+						var data={};
 						$("#editModal .tab_cols").each(function(){
 							var name = $(this).attr('rel');
-							cols[name]= $(this).val();
+							if($(this).hasClass('updated'))
+							{
+								var val = $("#col_"+name).val();
+								updated[name]= val;
+							}
+							else
+							{
+								var val = $("#actual_"+name).val();
+								actual[name]= val;
+							}
+							//cols[name]= $(this).val();
+							 
+
 						});
+						data= {'actual':actual,'updated':updated};
+						
 						var table = "<?php echo $this->view['tabledata'][0]; ?>";
 						var db = "<?php echo $this->view['current']; ?>";
 						var id = $("#rowID").val();
 						$.ajax({
 						   type: "POST",
-						   data: {cols:JSON.stringify(cols),db:db,table:table,id:id},
+						   data: {data:JSON.stringify(data),db:db,table:table},
 						   url: "<?php echo $this->appBase().'/admin/entity/updateRow' ?>",
 						   success: function(msg)
 						   {
-						   	$('#editModal').modal('hide');
-							bootbox.alert(msg,function(){location.reload();});
+								   	$('#editModal').modal('hide');
+									bootbox.alert(msg,function(){location.reload();});
 							
 						   }
 						});
@@ -306,7 +377,9 @@ $this->appendJS("../datatables/datatables.bootstrap.js");
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h4 class="modal-title" id="queryModalLabel"><?php echo "Query : ".$this->view['current']; ?></h4>
+        <h4 class="modal-title" id="queryModalLabel"><?php
+        $this->view['current'] = isset($this->view['current'])?$this->view['current']:"";
+         echo "Query : ".$this->view['current']; ?></h4>
       </div>
       <div class="modal-body">
       		<div class='form-group'>
@@ -393,8 +466,14 @@ if(isset($this->view['tabledata']))
                     {
                         str+="Showing 10 rows of "+list;
                     }
-                    $("#queryData").html(str);
-                    $("#queryData").parent().parent().parent().css("width","auto");
+                    //$("#queryData").html(str);
+                    //bootbox.alert(str);
+                    $("#db_query_cont").html(str);
+                    $('#queryRes').modal('show');
+                    $('.modal-dialog').css({'width':'75%','overflow':'auto'});
+                    $("#queryresultTable").dataTable();
+                    
+                   // $("#queryData").parent().parent().parent().css("width","auto");
 		   	}
 		   }
 		});
@@ -405,16 +484,17 @@ if(isset($this->view['tabledata']))
 if(isset($this->view['tables']))
 {
 	$path = $this->appBase().'/admin/entity/dbmanager?db='.$this->view['current'].'&table=';
-	$html = "<h3 style='text-align:center;'>Tables</h3><div class='list-group'>";
+	$html = "";
 	foreach ($this->view['tables'] as  $value) {
-	$html .="<a href='".$path.$value."' class='list-group-item'> $value </a>";
+	$html .="<li><a href='".$path.$value."' ><i class='fa fa-fw  fa-table'></i> $value </a></li>";
 }
-$html .="</div>";
+$html .="";
                       //echo $html;
 echo "<script type='text/javascript'>
-		$('.file_list').html(\"$html\");
-		$('.file_list').css({'padding-left':'18px',
-	    'padding-right': '2px'});
+		$('.tables').html(\"$html\");
+		/*$('.file_list').css({'padding-left':'18px',
+	    'padding-right': '2px'});*/
+$('#resultTable').dataTable();
 	</script>";
 
 }
@@ -430,3 +510,31 @@ if(!empty($msg))
 }
 
 ?>
+<div class="modal fade" id="queryRes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Query Result</h4>
+      </div>
+      <div class="modal-body" id="db_query_cont">
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+	function change_layout() {
+    $("body").toggleClass("fixed");
+    fix_sidebar();
+    $('.slimScrollBar').css({background:'white',opacity:.5});
+}
+change_layout();
+/*$("body").slimscroll({
+        
+    });*/
+</script>

@@ -56,3 +56,39 @@ body
 {
 	background: #428BCA !important;
 }
+.home_cont
+{
+    background: white;
+    margin-top: 10px;
+}
+.home_cont h3
+{
+   
+    color: #444;
+}
+.yes
+{
+    color: green;
+}
+.no
+{
+    color: red;
+}
+.footer
+{
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 30px;
+    background: #fff;
+    color: black;
+    border-top:solid 1px #428bca;
+  	z-index:100;
+}
+.footer .framework
+{
+    margin-right: 20px;
+    margin-left: 20px;
+    line-height: 30px;
+    color: #999;
+}

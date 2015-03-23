@@ -30,6 +30,8 @@
 			
 			$username=$this->post('username');
 			$password=$this->post('password');
+			$this->viewRequired=false;
+			$this->layoutRequired=false;
 			$modal = new Model_Admin();
 			$result =  $modal->processLogin($username,$password);
 			if($result)
@@ -47,7 +49,3 @@
 		
 
 	}
-
-
-
-?>

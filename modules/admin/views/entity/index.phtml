@@ -4,14 +4,19 @@
 $this->appendJS("../src-noconflict/ace.js");
 
 ?>
-<div class="col-md-12  col-sm-12 ">
+<div class="col-md-12  col-sm-12 " style="position:relative;">
+<div style="position:absolute;right:0;margin-top:10px;">
 	<form class="navbar-form navbar-right" role="search">
 	<a href="<?php echo $this->appBase().'/admin/entity/logout'; ?>" class="btn btn-info">Logout (Logged in as <?php echo $_SESSION['mysql_username']; ?>)</a>
 	</form>
-	<br style="clear:both;">
+	</div>
+<h3>Entity Generator</h3>
+
+	
+	<hr />
+	<!-- <br style="clear:both;"> -->
 	<div class="col-md-7 col-sm-10 col-xs-10 cont">
-		<h3>Entity Generator</h3>
-		<br/>
+		
 		<div class="form-group ">
 		    <label for="dbname">Chose Database</label>
 		    <div class="col-md-10 col-sm-10 col-xs-10" style="padding-left:0px;">

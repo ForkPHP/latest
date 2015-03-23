@@ -25,6 +25,8 @@
 		public function getProfileAction()
 		{
 			$modal = new Model_Admin();
+			$this->viewRequired=false;
+			$this->layoutRequired=false;
 			$isLogeedIn = $modal->validateLogin();
 			if(!$isLogeedIn)
 			{
@@ -34,10 +36,7 @@
 			$userInfo = $modal->getCurrentUser();
 			unset($userInfo['password']);
 			echo json_encode($userInfo);
+
 		}
 
 	}
-
-
-
-?>

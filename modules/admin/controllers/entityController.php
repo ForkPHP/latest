@@ -11,28 +11,33 @@
 			
 			$modal = new Model_Admin();
 			$isLogeedIn = $modal->validateLogin();  // Admin login verification
+			$return = base64_decode($this->get('return'));
 			if(!$isLogeedIn)
 			{
 				$mvc = new MVC(array('module'=>'admin','controller'=>'login'));
 				$this->redirect($mvc);
 			}
+			
 			$mysqlLogeedIn = $modal->mysqlAuth();
 			if($mysqlLogeedIn)
 			{
 				$mvc = new MVC(array('module'=>'admin','controller'=>'entity','action'=>'index'));
-				$this->redirect($mvc);
+				$this->redirect($return);
+			}
+			else
+			{
+				$app = new appConfig("application");
+				 $config = $app->get();
+				$this->view['db'] = $config['db'];
+
 			}
 			$status=$this->get('status');
-
 			if($status==-1)
 			{
 				$this->view['has_error']=1;
 			}
 			$this->layoutRequired=true;
 			$this->viewRequired=true;
-			//$this->layout="news";
-			//$this->layout="admin";
-			//echo "hi";
 			$this->title="Fork PHP : Entity Generator";
 			
 		}
@@ -42,9 +47,8 @@
 			$isLogeedIn = $modal->mysqlAuth();
 			if(!$isLogeedIn)
 			{
-				//print_r($isLogeedIn);die;
 				$mvc = new MVC(array('module'=>'admin','controller'=>'entity','action'=>'login'));
-				$this->redirect($mvc);
+				$this->redirect($mvc,array('return'=>base64_encode($this->appBase().'/admin/entity/index')));
 			}
 			$db = $modal->getMysqlDbList();
 			$this->view['dblist']=$db;
@@ -54,17 +58,37 @@
 		{
 			$dbusername=$this->post('username');
 			$dbpassword=$this->post('password');
+			$isDbname = $this->post('login_db');
+			//echo $isDbname;die;
+			$return = base64_decode($this->post('return'));
+			if($isDbname !="0")
+			{
+				$app = new appConfig("application");
+				 $config = $app->get();
+				$dbusername = $config["mysql.".$isDbname.".username"];
+				$dbpassword = $config["mysql.".$isDbname.".password"];
+			}
+			$this->viewRequired=false;
+			$this->layoutRequired=false;
 			$modal = new Model_Admin();
 			$result =  $modal->mysqlLogin($dbusername,$dbpassword);
-			if($result)
-			{
-				$mvc = new MVC(array('module'=>'admin','controller'=>'entity','action'=>'index'));
-				$this->redirect($mvc);
+			if($result==1)
+			{	if(!empty($return))
+				{
+					
+					$this->redirect($return);
+				}
+				else
+				{
+				
+					$mvc = new MVC(array('module'=>'admin','controller'=>'entity','action'=>'index'));
+					$this->redirect($mvc);
+				}
 			}
 			else
 			{
 				$mvc = new MVC(array('module'=>'admin','controller'=>'entity','action'=>'login'));
-				$this->redirect($mvc,array('status'=>'-1'));
+				$this->redirect($mvc,array('status'=>'-1','message'=>$result));
 			}
 			
 		}
@@ -97,7 +121,7 @@
 			
 			$modal = new Model_Admin();
 			$classes = $modal->getEntityClass($db,$tables);		
-			echo $classes;		
+			echo trim($classes);		
 		}
 		public function dbmanagerAction()
 		{
@@ -107,7 +131,7 @@
 			{
 				//print_r($isLogeedIn);die;
 				$mvc = new MVC(array('module'=>'admin','controller'=>'entity','action'=>'login'));
-				$this->redirect($mvc);
+				$this->redirect($mvc,array('return'=>base64_encode($this->appBase().'/admin/entity/dbmanager')));
 			}
 			$db = $modal->getMysqlDbList();
 			$this->title="DB Manager : Fork PHP";
@@ -132,6 +156,8 @@
 		{
 			$cols = $this->post('cols');
 			$cols = json_decode($cols);
+			$this->viewRequired=false;
+			$this->layoutRequired=false;
 			$db = $this->post('db');
 			$table = $this->post('table');
 			$modal = new Model_Admin();
@@ -147,28 +173,31 @@
 		}
 		public function deleteRowAction()
 		{
-			$db = $this->get("db");
-			$table = $this->get("table");
-			$id = $this->get("id");
+			$data = $this->post("data");
+			$table = $this->post("table");
+			$db = $this->post("db");
+			$data=json_decode($data);
 			$modal = new Model_Admin();
-			$res = $modal->deleteRow($db,$table,$id);
+			$this->viewRequired=false;
+			$this->layoutRequired=false;
+			$res = $modal->deleteRow($db,$table,$data);
 			if($res ==1)
 			{
-				$msg = base64_encode("Row Deleted Successfully.");
+				$msg = "Row Deleted Successfully.";
 			}
 			else
 			{
 				$msg=$res;
 			}
-			$mvc = new MVC(array('action'=>'dbmanager'));
-			$this->redirect($mvc,array('db'=>$db,'table'=>$table,'msg'=>$msg));
+			echo $msg;
 		}
 		public function getRowAction()
 		{
 			$db = $this->post("db");
 			$table = $this->post("table");
 			$id = $this->post("id");
-			
+			$this->viewRequired=false;
+			$this->layoutRequired=false;
 			$modal = new Model_Admin();
 			$res = $modal->getRow($db,$table,$id);
 			$values=array();
@@ -179,14 +208,16 @@
 		}
 		public function updateRowAction()
 		{
-			$cols = $this->post('cols');
-			$cols = json_decode($cols);
-			
+			$data = $this->post('data');
+			$data = (array)json_decode($data);
+			$actual=$data['actual'];
+			$updated=$data['updated'];
+			$this->viewRequired=false;
+			$this->layoutRequired=false;
 			$db = $this->post('db');
-			$id = $this->post('id');
 			$table = $this->post('table');
 			$modal = new Model_Admin();
-			$res = $modal->updateRow($db,$table,$cols,$id);
+			$res = $modal->updateRow($db,$table,$actual,$updated);
 			if($res==1)
 			{
 				echo "Row Updated.";
@@ -201,6 +232,8 @@
 			$db = $this->post('db');
 			$query = $this->post('table');
 			$modal = new Model_Admin();
+			$this->viewRequired=false;
+			$this->layoutRequired=false;
 			$res = $modal->createTable($db,$query);
 			if(!is_object($res) && $res==1)
 			{
@@ -216,6 +249,8 @@
 			$db = $this->post('db');
 			$table = $this->post('table');
 			$modal = new Model_Admin();
+			$this->viewRequired=false;
+			$this->layoutRequired=false;
 			$res = $modal->dropTable($db,$table);
 			if(!is_object($res) && $res==1)
 			{
@@ -231,6 +266,8 @@
 			$db = $this->post('db');
 			$query = $this->post('query');
 			$modal = new Model_Admin();
+			$this->viewRequired=false;
+			$this->layoutRequired=false;
 			$res = $modal->execQuery($db,$query);
 			if(is_array($res))
 			{
@@ -247,6 +284,16 @@
 				echo json_encode($arr);
 
 			}
+		}
+		public function saveEntityAction()
+		{
+			$this->viewRequired=false;
+			$this->layoutRequired=false;
+			$db = $this->post('dbName');
+			$code = '<?php '."\n".trim($this->post('code'));
+		//	file_put_contents($path."/controllers/".$controller."Controller.php",str_replace("{{code}}", $code, ) );
+			$res = file_put_contents($_SERVER['DOCUMENT_ROOT'].'/'.$GLOBALS['host'].'/lib/Entities/'.$db.'.php', $code);
+			echo $res;
 		}
 
 	}

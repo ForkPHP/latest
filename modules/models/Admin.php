@@ -30,8 +30,15 @@ class Model_Admin
 		$dbhost="localhost";
 
 		//$db = $this->getMysqlDbList();
+		try
+		{
+			$dbcnx = mysql_connect($dbhost, $username, $password); 
+		}
+		catch(Exception $e)
+		{
+			return $e->getMessage();
+		}
 		
-		$dbcnx = @mysql_connect($dbhost, $username, $password); 
 		//print_r($dbcnx);die;
 		if($dbcnx)
 		{
@@ -39,7 +46,7 @@ class Model_Admin
 			$_SESSION['mysql_username']=$username;
 			$_SESSION['mysql_password']=$password;
 			//print_r($_SESSION);die;
-			return true;
+			return 1;
 		}
 		else
 		{
@@ -195,15 +202,22 @@ class Model_Admin
 			//$dbcnx = mysqli_connect("localhost", $_SESSION['mysql_username'], $_SESSION['mysql_password'],$db); 
 			$dbcnx = new PDO("mysql:host=localhost;dbname=$db", $_SESSION['mysql_username'], $_SESSION['mysql_password']);
 			$dbcnx->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-			
+			$dbcnx->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
 			$query = $dbcnx->prepare($query);
-			return $query->execute($prep);	
+			/*if (!$query->execute($prep)) {
+		        print_r($dbcnx->errorInfo());
+		    }
+		    else
+		    {
+		    	echo "done";
+		    }*/
+			$res = $query->execute($prep);	
+			return $res;
 		}
 		catch(Exception $e)
 		{
-			return $e;
+			return $e->getMessage();
 		}
-
 	}
 	public function getTableSchema($db,$table)
 	{
@@ -229,11 +243,14 @@ class Model_Admin
 		//return $query;
 		return $this->execNonQuery($db,$query,$prep);
 	}
-	public function deleteRow($db,$table,$id)
+	public function deleteRow($db,$table,$data)
 	{
 		$prep=array();
-		$prep[':'."id"] = $id;
-	  	$where[] = "id"."=".":"."id";
+		foreach($data as $k => $v )
+		{
+	  	  $prep[':'.$k] = $v;
+	  	  $where[] = $k."=".":".$k;
+		}
 		$query = "DELETE FROM $table WHERE " . implode(' AND ',array_values($where)) ;
 		return $this->execNonQuery($db,$query,$prep);
 	}
@@ -243,18 +260,24 @@ class Model_Admin
         $rows = $this->execQuery($db,$query);
         return $rows[0];
 	}
-	public function updateRow($db,$table,$rdata,$id)
+	public function updateRow($db,$table,$actual,$updated)
 	{
 		$prep=array();
-		$rdata = (array)$rdata;
-		foreach($rdata as $k => $v )
+		$updated = (array)$updated;
+		foreach($updated as $k => $v )
 		{
 	  	  $prep[':data'.$k] = $v;
 	  	  $data[] = $k."=".":data".$k;
 		}
+		foreach($actual as $k => $v )
+		{
+	  	  $prep[':cond'.$k] = $v;
+	  	  $cond[] = $k."=".":cond".$k;
+		}
+/*
 		$prep[':cond'."id"] = $id;
-	  	$cond[] = "id=:condid";
-		$query ="UPDATE $table SET " . implode(',',array_values($data))." WHERE ".implode(' AND ', array_values($cond)) ;
+	  	$cond[] = "id=:condid";*/
+	  	$query ="UPDATE $table SET " . implode(',',array_values($data))." WHERE ".implode(' AND ', array_values($cond)) ;
 		return $this->execNonQuery($db,$query,$prep);
 	}
 	public function createTable($db,$query)
@@ -271,7 +294,8 @@ class Model_Admin
 	/* User Profile Methods*/
 	public function getCurrentUser()
 	{
-		$username = $_SESSION['user'];
+		
+		$username = $_SESSION['user']['username'];
 		$userObj = new users();
 		$userObj->username=$username;
 		$dbCon = new DbContext();
@@ -287,8 +311,19 @@ class Model_Admin
 		$libObj = new Fork_Lib();
 		$file = $_SERVER['DOCUMENT_ROOT']."/".$GLOBALS['host']."/App/".$file;
 		$res = $libObj->updateFileContent($file,$content);
+		return $res;
+	}
+	public function getFileContent($path)
+	{
+		$config = new Fork_Lib();
+		$path =$_SERVER['DOCUMENT_ROOT']."/".$GLOBALS['host'].$path;
+		return $config->getFileContent($path);
 
 	}
+	public function setFileContent($path,$content)
+	{
+		$config = new Fork_Lib();
+		$path =$_SERVER['DOCUMENT_ROOT']."/".$GLOBALS['host'].$path;
+		return $config->updateFileContent($path,$content);
+	}
 }
-
-?>

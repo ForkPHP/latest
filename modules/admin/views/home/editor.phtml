@@ -1,3 +1,52 @@
+
+<script type="text/javascript">
+</script>
+
+<?php
+/*$files = $this->view['files'];
+$script = "<script>function getfiles(){";
+foreach ($files as $file)
+{
+	$script .="addTab('".$file['name']."','".$file['ext']."','".$file['path']."');";
+}
+$script .="}</script>";
+echo $script;*/
+?>
+
+<?php 
+$this->appendCSS("../codemirror/lib/codemirror.css");
+$this->appendCSS("../codemirror/theme/monokai.css");
+$this->appendCSS("../codemirror/addon/display/fullscreen.css");
+//$this->appendCSS("jquery-ui-1.10.4.custom.min.css");
+$this->appendJS("../codemirror/lib/codemirror.js");
+$this->appendJS("../codemirror/mode/javascript/javascript.js");
+$this->appendJS("../codemirror/mode/htmlmixed/htmlmixed.js");
+$this->appendJS("../codemirror/mode/php/php.js");
+$this->appendJS("../codemirror/mode/css/css.js");
+$this->appendJS("../codemirror/mode/xml/xml.js");
+$this->appendJS("../codemirror/mode/clike/clike.js");
+$this->appendJS("../codemirror/mode/turtle/turtle.js");
+$this->appendJS("../codemirror/mode/properties/properties.js");
+$this->appendJS("../codemirror/addon/display/fullscreen.js");
+//$this->appendJS("jquery-ui-1.10.4.custom.min.js");
+if(isset($this->view['files']))
+{
+
+	$cookTabs = explode(",", ltrim($_COOKIE['tabs'],','));
+	$files = $this->view['files'];
+
+	foreach ($files as $file)
+	{
+		if(!in_array($file['name']."#".$file['ext']."#".$file['path'],$cookTabs))
+		$cookTabs[]=$file['name']."#".$file['ext']."#".$file['path'];
+	}
+
+	$cookTabs = implode(',', $cookTabs);
+
+	setcookie('tabs',$cookTabs);
+}
+?>
+
 <!-- <fieldset>
 		<textarea id="sourceeditor" style="height: 250px; width: 100%;" name="test_2">
 		</textarea>
@@ -10,8 +59,19 @@
 </fieldset>
  -->
 
- <div class="container">
+<!--  <div class="container">
  	<h3> Editor Update Awaited</h3>
  	<hr/>
  	<p> Editor will be available with next update.</p>
- </div>
+ </div> -->
+  <div class="" style="margin-top:15px;">
+ 	<ul class="nav nav-tabs editorTab" id="editorTab">
+	  
+	</ul>
+
+	<!-- Tab panes -->
+	<div class="tab-content" id="editorBody">
+	 
+	</div>
+</div>
+	

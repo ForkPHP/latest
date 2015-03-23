@@ -11,12 +11,7 @@
 		{
 			$mvc = new MVC(array('action'=>'index','controller'=>'login'));
 			$this->redirect($mvc);
-
 		}
 		
 
 	}
-
-
-
-?>

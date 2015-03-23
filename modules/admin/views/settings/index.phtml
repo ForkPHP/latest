@@ -1,6 +1,11 @@
 <?php
-$this->appendJS("../src-noconflict/ace.js");
 
+$this->appendCSS("../codemirror/lib/codemirror.css");
+$this->appendCSS("../codemirror/theme/monokai.css");
+$this->appendCSS("../codemirror/addon/display/fullscreen.css");
+$this->appendCSS("jquery-ui-1.10.4.custom.min.css");
+$this->appendJS("../codemirror/lib/codemirror.js");
+$this->appendJS("../codemirror/mode/properties/properties.js");
 ?>
 
 
@@ -37,19 +42,11 @@ $this->appendJS("../src-noconflict/ace.js");
       {
         echo "<h3>".$key."</h3><br/>";
         $name = str_replace(".ini", "", $key);
-        echo"<pre class='editor' id=$name>$value</pre>";
+        echo"<textarea class='editor form-control ' id=$name>$value</textarea>";
         echo "<input type='button'  class='btn btn-primary inifile' rel=$name value='Save' />";
         echo "<br/>";
       }
-      foreach ($this->view['inifiles'] as $key => $value) 
-      {
-        $name = str_replace(".ini", "", $key);
-        echo "<script>";
-        echo"var $name = ace.edit('".$name."');
-            $name.setTheme('ace/theme/twilight');
-            $name.getSession().setMode('ace/mode/ini');";
-        echo "</script>";
-      }
+     
       
  
 
@@ -57,45 +54,19 @@ $this->appendJS("../src-noconflict/ace.js");
       </div>
     </div>
   </div>
-  <!--
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-          Front End User Settings
-        </a>
-      </h4>
-    </div>
-    <div id="collapseTwo" class="panel-collapse collapse">
-      <div class="panel-body">
-        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-      </div>
-    </div>
-  </div>
-  <div class="panel panel-default">
-    <div class="panel-heading">
-      <h4 class="panel-title">
-        <a data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
-          Collapsible Group Item #3
-        </a>
-      </h4>
-    </div>
-    <div id="collapseThree" class="panel-collapse collapse">
-      <div class="panel-body">
-        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-      </div>
-    </div>
-  </div> -->
+ 
 </div>
 <script type="text/javascript">
-  $('.inifile').click(function()
+$(document).ready(function(){
+$('.inifile').click(function()
   {
     var file = $(this).attr("rel");
-    file = eval(file);
-    var content = file.getValue();
+    
+    var content = editors[file].getValue();
+    
     $.ajax({
          type: "POST",
-         data: {file:file,content:content},
+         data: {file:file+".ini",content:content},
          url: "<?php echo $this->appBase().'/admin/settings/updateInI'; ?>",
          success: function(msg)
          {
@@ -104,4 +75,30 @@ $this->appendJS("../src-noconflict/ace.js");
       });
 
   });
+
+  var editors={};
+  $('.editor').each(function(index,object)
+  {
+    var name = $(object).attr('id');
+     editors[name] =  CodeMirror.fromTextArea(object, {
+        lineNumbers: true,
+          theme: "default",
+            mode:  'text/x-ini',
+            extraKeys: {
+                  "F11": function(cm) {
+                    cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    $(".navbar-fixed-top").toggle();
+                  },
+                  "Esc": function(cm) {
+                    if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                    $(".navbar-fixed-top").toggle();
+                  }
+                }
+      });
+     /* editors['"'+name+'"'].setValue(content)
+      editors['"'+name+'"'].setSize('100%','510');*/
+  });
+
+});
+  
 </script>

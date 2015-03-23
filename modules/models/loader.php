@@ -17,5 +17,3 @@ class Model_loader
 
 
 }
-
-?>

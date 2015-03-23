@@ -9,6 +9,7 @@
 		public function indexAction()
 		{
 			//$this->viewRequired=tr;
+			
 			$modal = new Model_Default();
 			$isLogeedIn = $modal->validateLogin();
 			$this->title="Fork PHP : Home";
@@ -16,14 +17,12 @@
 			{
 				$mvc = new MVC(array('module'=>'default','controller'=>'accounts'));
 				$this->redirect($mvc,array('status'=>'-1'));
-			}
-			$this->layoutRequired=true;
-			$this->viewRequired=true;
-			//$this->layout="news";
-			$this->layout="default";
-			//echo "hi";
-			//$this->title="Login : Front End";
+			}	
 			
+			
+		}
+		public function invalidAction()
+		{
 			
 		}
 		public function logoutAction()
@@ -32,8 +31,22 @@
 			$mvc = new MVC(array('module'=>'default','controller'=>'index'));
 			$this->redirect($mvc);
 		}
-		
+		public function getProfileAction()
+		{
+			$modal = new Model_Default();
+			$this->viewRequired=false;
+			$this->layoutRequired=false;
+			$isLogeedIn = $modal->validateLogin();
+			if(!$isLogeedIn)
+			{
+				$mvc = new MVC(array('module'=>'default','controller'=>'login'));
+				$this->redirect($mvc,array('status'=>'-1'));
+			}
+			$userInfo = $modal->getCurrentUser();
+			unset($userInfo['password']);
+			echo json_encode($userInfo);
+
+		}
+	
 		
 	}
-
-

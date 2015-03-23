@@ -31,9 +31,13 @@
 			}
 			$file = $this->post("file");
 			$content = $this->post("content");
-			
+			$this->viewRequired=false;
+			$this->layoutRequired=false;
 			$res = $modal->updateFileContent($file,$content);
-			echo $res;
+			if($res==1)
+			{
+				echo $file." hasbeen updated successfully.";
+			}
 
 		}
 	}

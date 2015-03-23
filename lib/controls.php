@@ -1,4 +1,4 @@
-<?php
+<?php if(!defined('APP_HOST')) die('Access restricted.');
 
 class DOMObject
 {
@@ -76,7 +76,3 @@ class MVC
 		$this->action = isset($mvc['action'])?$mvc['action']:"index";
 	}
 }
-
-
-
-?>

@@ -33,9 +33,19 @@ class Model_Default
 		$userObj = new userSystem($iniData['users.class'],0);
 		return $userObj->add($name,$email,$password);
 	}
+	public function getCurrentUser()
+	{
+		$username = $_SESSION['user'];
+		$userObj = new users();
+		$userObj->username=$username;
+		$dbCon = new DbContext();
+		$userInfo = $dbCon->Get($userObj)->ToArray();
+		$userprofileObj = new user_profile();
+		$userprofileObj->user_id=$userInfo['id'];
+		$profileInfo = $dbCon->Get($userprofileObj)->ToArray();
+		$userInfo = array_merge($userInfo,$profileInfo);
+		return $userInfo;	
+	}
 	
 
-
 }
-
-?>
