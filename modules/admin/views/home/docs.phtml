@@ -1,0 +1,94 @@
+<div class="content-section-a">
+    <div class="container">
+		<div class="row">
+			<div class='col-lg-12'>
+				<h1> Edit Documentation</h1>
+				<hr/>
+			</div>
+			<!-- <div class="col-lg-2">
+				
+				
+				
+			</div> -->
+			<div class="col-lg-11 doc_con"  style="background:#fff;">
+			<?php
+					echo "Edit a class : <select class='classes_drop'><option value=''>Edit a class</option>";
+                    foreach ($this->view['classList'] as $class) {
+                        # code...
+                        $active = (isset($this->view['classData']) && $this->view['classData']->name == $class->name)?"selected":"";
+                        echo "<option  val='".$class->name."' $active>".$class->name."</option>";
+                    }
+                    echo " </select>";
+					
+				?>
+			<?php 
+				if(isset($this->view['classData'])){
+			?>
+				<h2 style="text-transform:capitalize;"> <?php echo $this->view['classData']->name; ?> Class</h2>
+
+				<div>
+					<?php echo "<textarea class='form-control description_text'>".$this->view['classData']->description."</textarea>"; ?>
+					<input type='button' value='Save' id='updateClass' classid="<?php echo $this->view['classData']->id; ?>" class='btn btn-primary'>
+					<h3>Properties</h3>
+					<p><?php echo $this->view['classData']->properties; ?></p>
+					<h3>Parent Class</h3>
+					<p><?php echo (!empty($this->view['classData']->parent_class))?$this->view['classData']->parent_class:"None"; ?></p>
+					<h3>File Path</h3>
+					<p><?php echo $this->view['classData']->file_name; ?></p>
+					<?php 
+					//print_r($this->view['classData']);
+					?>
+
+				</div>
+				<?php
+				 //print_r($this->view['methodData']);
+
+				if(is_array($this->view['methodData']))
+				{
+					echo "<h2>Methods</h2>";
+					foreach ($this->view['methodData'] as $method) {
+
+						echo "<div class='method'>";
+						echo "<h3> $method->name () </h3>";
+						echo "<br/>";
+						echo "<textarea id='method_$method->id' class='form-control description_text methods'> $method->description </textarea>";
+						echo "<h3>Enable :<input type='checkbox' id='status_$method->id' ".(($method->status==1)?"checked":"")." class='enable_method'></h3>";
+						echo "<input type='button' value='Save'  classid='".$this->view['classData']->id."' class='btn btn-primary updateMethod'>";
+						echo "<h3> Parameters </h3>";
+						echo "<p> $method->parameters </p>";
+						echo "<h3> Definition </h3>";
+						echo "<pre> ".htmlentities(base64_decode($method->code))."</pre>";
+						
+						echo "</div>";
+					//	print_r($method);
+					}
+					echo "<input type='button' value='Save All Data' id='saveAll'  classid='".$this->view['classData']->id."' class='btn btn-primary'>";
+				}
+			}else{
+				?>
+
+                <h2> Overview </h2>
+                
+                <p>
+                    Fork PHP is a MVC / Core PHP Framework with Updated programming techniques, Strong Library for developing web applications and services using PHP 5.3+.It is purely object oriented. We have tried our best to
+                    make development task as easier as possible.
+                </p>
+				<?php
+
+			}
+				?>
+			
+				
+			</div>
+		</div>
+	</div>
+</div>
+
+<style type="text/css">
+	.method{padding: 5px; border: solid 1px gray;margin-bottom: 10px;position: relative;}
+	.classes_drop{padding: 5px;margin-top: 15px;}
+	.description_text{height:120px !important; resize:none;margin-bottom: 15px;}
+	.doc_con{margin-bottom: 20px;}
+	pre{max-height:250px;overflow: auto;}
+	.enable_method{position: absolute; right: 10px; top: 10px;}
+</style>

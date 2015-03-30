@@ -1,0 +1,315 @@
+<?php
+// +----------------------------------------------------------------------+
+// | Fork PHP :: Layout                                                   |
+// +----------------------------------------------------------------------+
+// | Copyright (c) 2013-2014 Fork PHP Team                                |
+// +----------------------------------------------------------------------+
+// | This source file is a Template for the Default Layout. It falls      |
+// | under MIT Licence. Code is generated via Module Manager.             |
+// +----------------------------------------------------------------------+
+// | Authors: Eshant Sahu <eshantsahu@forkphp.com>                        |
+// +----------------------------------------------------------------------+
+//
+
+/**
+* If you do not want to include this block in your code, You can modify it in the lib->template->layout
+* @author   Eshant Sahu <eshantsahu@forkphp.com>
+* @version  1.0.1.2
+* @access   public
+*/
+$this->appendCSS("bootstrap.min.css",$this->baseUrl()."/AdminLTE/css");
+$this->appendCSS("font-awesome.min.css",$this->baseUrl()."/AdminLTE/css");
+$this->appendCSS("ionicons.min.css",$this->baseUrl()."/AdminLTE/css");
+$this->appendCSS("morris.css",$this->baseUrl()."/AdminLTE/css/morris");
+$this->appendCSS("jquery-jvectormap-1.2.2.css",$this->baseUrl()."/AdminLTE/css/jvectormap");
+$this->appendCSS("datepicker3.css",$this->baseUrl()."/AdminLTE/css/datepicker");
+$this->appendCSS("daterangepicker-bs3.css",$this->baseUrl()."/AdminLTE/css/daterangepicker");
+$this->appendCSS("bootstrap3-wysihtml5.min.css",$this->baseUrl()."/AdminLTE/css/bootstrap-wysihtml5");
+$this->appendCSS("AdminLTE.css",$this->baseUrl()."/AdminLTE/css");
+$this->appendJS("jquery.min.js");
+$this->appendJS("jquery-ui-1.10.3.min.js",$this->baseUrl()."/AdminLTE/js");
+$this->appendJS("bootstrap.min.js",$this->baseUrl()."/AdminLTE/js");
+$this->appendJS("jquery.sparkline.min.js",$this->baseUrl()."/AdminLTE/js/plugins/sparkline");
+$this->appendJS("jquery-jvectormap-1.2.2.min.js",$this->baseUrl()."/AdminLTE/js/plugins/jvectormap");
+$this->appendJS("jquery-jvectormap-world-mill-en.js",$this->baseUrl()."/AdminLTE/js/plugins/jvectormap");
+$this->appendJS("jquery.knob.js",$this->baseUrl()."/AdminLTE/js/plugins/jqueryKnob");
+$this->appendJS("daterangepicker.js",$this->baseUrl()."/AdminLTE/js/plugins/daterangepicker");
+$this->appendJS("bootstrap-datepicker.js",$this->baseUrl()."/AdminLTE/js/plugins/datepicker");
+$this->appendJS("bootstrap3-wysihtml5.all.min.js",$this->baseUrl()."/AdminLTE/js/plugins/bootstrap-wysihtml5");
+$this->appendJS("icheck.min.js",$this->baseUrl()."/AdminLTE/js/plugins/iCheck");
+$this->appendJS("app.js",$this->baseUrl()."/AdminLTE/js/AdminLTE");
+$this->appendJS("dashboard.js",$this->baseUrl()."/AdminLTE/js/AdminLTE");
+$this->appendJS("demo.js",$this->baseUrl()."/AdminLTE/js/AdminLTE");
+$this->appendJS("jquery.cookie.js");
+$this->appendJS("bootbox-4.1.0.min.js");
+$this->appendJS("admin/admin.js");
+$this->appendCSS("bootstrap.min.css");
+$this->appendCSS("admin/style.css");
+echo "<script>var APP_BASE = '".$this->appBase()."' </script>";
+$iconPath= $this->baseUrl().'/img/icon.png';
+$this->headString("<link rel='icon' href=$iconPath type='image/x-icon'>");
+$user = $this->_helper->currentUser();
+
+?>
+<meta name="keywords" content="php, forkphp, framework, orm, tomwased" >
+
+        <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+        <!-- bootstrap 3.0.2 -->
+        
+        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+          <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+        <![endif]-->
+    
+        <!-- header logo: style can be found in header.less -->
+        <header class="header">
+            
+                <!-- Add the class icon to your logo image or logo icon to add the margining -->
+                <a href="<?php echo $this->appBase().'/admin/home'; ?>" class="logo"><?php echo APP_NAME; ?> Admin</a>
+            
+            <!-- Header Navbar: style can be found in header.less -->
+            <nav class="navbar navbar-static-top" role="navigation">
+                <!-- Sidebar toggle button-->
+                <a href="#" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </a>
+                <div class="navbar-right">
+                    <ul class="nav navbar-nav">
+                       
+                        <li class="dropdown user user-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class="glyphicon glyphicon-user"></i>
+                                <span><?php echo $user['name']; ?><i class="caret"></i></span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <!-- User image -->
+                                <li class="user-header bg-light-blue">
+                                    
+                                    <img src="<?php echo is_file($this->baseUrl().'/users/profile/'.$user['img_url'])?$this->baseUrl().'/users/profile/'.$user['img_url']:$this->baseUrl().'/users/profile/default.png'; ?>" class="img-circle" alt="<?php echo $user['name']; ?>" />
+                                    <p>
+                                        <?php echo $user['name']; ?>
+                                        <small>Member since <?php
+                                        $cdate = new dateTime($user['cdate']);
+                                         echo $cdate->format(" d, M Y") ; ?></small>
+                                    </p>
+                                </li>
+                                <!-- Menu Body -->
+                                
+                                <!-- Menu Footer-->
+                                <li class="user-footer">
+                                    <div class="pull-left">
+                                        <a href="<?php echo $this->appBase().'/admin/profile'; ?>" class="btn btn-default btn-flat">Profile</a>
+                                    </div>
+                                    <div class="pull-right">
+                                        <a href="<?php echo $this->appBase().'/admin/home/logout'; ?>" class="btn btn-default btn-flat">Sign out</a>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+        <div class="wrapper row-offcanvas row-offcanvas-left">
+            <!-- Left side column. contains the logo and sidebar -->
+            <aside class="left-side sidebar-offcanvas">
+                <!-- sidebar: style can be found in sidebar.less -->
+                <section class="sidebar">
+                    <!-- Sidebar user panel -->
+                    <div class="user-panel">
+                        <div class="pull-left image">
+                            <img src="<?php echo is_file($this->baseUrl().'/users/profile/'.$user['img_url'])?$this->baseUrl().'/users/profile/'.$user['img_url']:$this->baseUrl().'/users/profile/default.png'; ?>" class="img-circle" alt="<?php echo $user['name']; ?>" />
+                        </div>
+                        <div class="pull-left info">
+                            <p>Hello, <?php echo isset($user['first_name'])?$user['first_name']:$user['username']; ?></p>
+
+                            <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+                        </div>
+                    </div>
+                    <!-- search form -->
+                    <form action="#" method="get" class="sidebar-form">
+                        <div class="input-group">
+                            <input type="text" name="q" class="form-control" placeholder="Search..."/>
+                            <span class="input-group-btn">
+                                <button type='submit' name='seach' id='search-btn' class="btn btn-flat"><i class="fa fa-search"></i></button>
+                            </span>
+                        </div>
+                    </form>
+                    <!-- /.search form -->
+                    <!-- sidebar menu: : style can be found in sidebar.less -->
+                    <ul class="sidebar-menu">
+                        <li class="active">
+                            <a href="<?php echo $this->appBase().'/admin/home'; ?>">
+                                <i class="fa fa-dashboard"></i> <span>Dashboard</span>
+                            </a>
+                        </li>
+                        <?php
+                        $libObj = new Fork_Lib();
+                        if($libObj->getControllerName()=="home" && $libObj->getActionName()=="index")
+                        {
+                        ?>
+                        <!-- <li>
+                            <a href="pages/widgets.html">
+                                <i class="fa fa-th"></i> <span>Widgets</span> <small class="badge pull-right bg-green">new</small>
+                            </a>
+                        </li>
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-bar-chart-o"></i>
+                                <span>Charts</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="pages/charts/morris.html"><i class="fa fa-angle-double-right"></i> Morris</a></li>
+                                <li><a href="pages/charts/flot.html"><i class="fa fa-angle-double-right"></i> Flot</a></li>
+                                <li><a href="pages/charts/inline.html"><i class="fa fa-angle-double-right"></i> Inline charts</a></li>
+                            </ul>
+                        </li>
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-laptop"></i>
+                                <span>UI Elements</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="pages/UI/general.html"><i class="fa fa-angle-double-right"></i> General</a></li>
+                                <li><a href="pages/UI/icons.html"><i class="fa fa-angle-double-right"></i> Icons</a></li>
+                                <li><a href="pages/UI/buttons.html"><i class="fa fa-angle-double-right"></i> Buttons</a></li>
+                                <li><a href="pages/UI/sliders.html"><i class="fa fa-angle-double-right"></i> Sliders</a></li>
+                                <li><a href="pages/UI/timeline.html"><i class="fa fa-angle-double-right"></i> Timeline</a></li>
+                            </ul>
+                        </li>
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-edit"></i> <span>Forms</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="pages/forms/general.html"><i class="fa fa-angle-double-right"></i> General Elements</a></li>
+                                <li><a href="pages/forms/advanced.html"><i class="fa fa-angle-double-right"></i> Advanced Elements</a></li>
+                                <li><a href="pages/forms/editors.html"><i class="fa fa-angle-double-right"></i> Editors</a></li>
+                            </ul>
+                        </li>
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-table"></i> <span>Tables</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="pages/tables/simple.html"><i class="fa fa-angle-double-right"></i> Simple tables</a></li>
+                                <li><a href="pages/tables/data.html"><i class="fa fa-angle-double-right"></i> Data tables</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <a href="pages/calendar.html">
+                                <i class="fa fa-calendar"></i> <span>Calendar</span>
+                                <small class="badge pull-right bg-red">3</small>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="pages/mailbox.html">
+                                <i class="fa fa-envelope"></i> <span>Mailbox</span>
+                                <small class="badge pull-right bg-yellow">12</small>
+                            </a>
+                        </li>
+                        <li class="treeview">
+                            <a href="#">
+                                <i class="fa fa-folder"></i> <span>Examples</span>
+                                <i class="fa fa-angle-left pull-right"></i>
+                            </a>
+                            <ul class="treeview-menu">
+                                <li><a href="pages/examples/invoice.html"><i class="fa fa-angle-double-right"></i> Invoice</a></li>
+                                <li><a href="pages/examples/login.html"><i class="fa fa-angle-double-right"></i> Login</a></li>
+                                <li><a href="pages/examples/register.html"><i class="fa fa-angle-double-right"></i> Register</a></li>
+                                <li><a href="pages/examples/lockscreen.html"><i class="fa fa-angle-double-right"></i> Lockscreen</a></li>
+                                <li><a href="pages/examples/404.html"><i class="fa fa-angle-double-right"></i> 404 Error</a></li>
+                                <li><a href="pages/examples/500.html"><i class="fa fa-angle-double-right"></i> 500 Error</a></li>
+                                <li><a href="pages/examples/blank.html"><i class="fa fa-angle-double-right"></i> Blank Page</a></li>
+                            </ul>
+                        </li> -->
+
+                        <?php
+                        }
+                        elseif($libObj->getControllerName()=="entity" && $libObj->getActionName()=="dbmanager")
+                        {
+                            ?>
+                            <li class="treeview active">
+                                <a href="#">
+                                    <i class="fa fa-fw  fa-table"></i> <span>DB Tables</span>
+                                    <i class="fa fa-angle-left pull-right"></i>
+                                </a>
+                                <ul class="treeview-menu tables">
+                                    
+                                </ul>
+                            </li>
+                            <?php
+                        }
+                        ?>
+                    </ul>
+                </section>
+                <section class="sidebar">
+                    <ul class="sidebar-menu">
+                <?php 
+                  $libObj = new Fork_Lib();
+                  if($libObj->getControllerName()=="home" && $libObj->getActionName()=="editor")
+                  {
+
+                    $this->partial("filemanager"); 
+                   }
+                  if($libObj->getControllerName()=="webservices") // show webservices tree
+                  {
+                    echo "<li class='treeview'><a href='#'><i class='fa fa-fw fa-cogs'></i><span> Web Services</span><i class='fa pull-right fa-angle-down'></i></a>";
+                    echo "<ul class='treeview-menu'>";
+                    $webservice = new webservice();
+                    $classes = $webservice->getClasses();
+                    $classes=array_diff($classes, array("admin_webservicesController"));
+
+                    foreach ($classes as  $class)
+                    {
+                      echo "<li class='treeview active'><a href='#'><i class='fa fa-fw fa-code'></i> ".str_replace("webservice_", "", $class)."</a><ul class='treeview-menu '>";
+                     // echo "<ul class='service'>";
+                      $methods =array_diff(get_class_methods($class), get_class_methods('Controller'));
+                      foreach ($methods as $method)
+                      {
+                        $echoStr= "";
+                        //$echoStr.= "<ul>";
+                        $r = new ReflectionMethod($class, $method);
+                        $params = $r->getParameters();
+                        $thisParams = "This Method requires : ".implode(", ", $params);
+                        /*foreach ($params as $param) {
+                            //$param is an instance of ReflectionParameter
+                            $echoStr.= "<li><a title='".$param."'>".$param->getName()."</a></li>";
+                            //echo $param->isOptional()."<br/>";
+
+                        }*/
+                        echo "<li><a href='#' name='".$class."#".$method."' title='".$thisParams."' class='openWeb'><i class='fa fa-fw fa-bolt'></i> ".$method."( )</a></li>".$echoStr;
+                       // echo "</ul>";
+                      }
+                      echo "</ul></li>";
+                    }
+                    echo "</ul></li>";
+                  }
+                  
+                ?>
+
+                </ul>
+                </section>
+                <!-- /.sidebar -->
+            </aside>
+
+            <!-- Right side column. Contains the navbar and content of the page -->
+            <aside class="right-side rightpage">
+                <?php $this->view(); ?>
+            </aside><!-- /.right-side -->
+        </div><!-- ./wrapper -->
+
+        <!-- add new calendar event modal -->
+
+
+        <!-- jQuery 2.0.2 -->
+        <?php $this->partial('lockscreen')?>

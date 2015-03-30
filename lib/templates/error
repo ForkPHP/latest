@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<style>
+	.conts
+	{
+		margin-bottom:15px;
+		font-style:italic;
+	}
+	.stack .pre
+	{
+		padding: 15px;
+		background:#E8E8E8;
+		display:block;
+	}
+	.conts span
+	{
+		display:inline-block;
+		padding-right:10px;	
+	}
+	</style>
+	</head>
+	<body>
+		<div style='width: 99%; font-family: Trebuchet MS; position: absolute; top: 0px; background: none repeat scroll 0% 0% white; height: 100%;'>
+			<div style='font-size:25px;line-height:45px;margin-bottom:30px;'>
+				<label style='color:red;'> {{exceptionname}} in '/{{appname}}' Application </label>
+				<hr/>
+			</div>
+			<div style='font-size:16px;'>
+			<p style='color:brown;'> <i>{{text}}</i></p>
+			 <div class='conts'>
+			 <span><strong>Description: </strong></span>{{desc}}
+			 </div>
+			 <div class='conts'>
+			 <span><strong>Request URI: </strong></span> {{requesturi}}
+			 </div>
+			 <div class='conts stack'>
+			 <span><strong>Stack Call : </strong></span>
+			 <span class='pre'>	
+{{stacktrace}}
+			</span>	
+			</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,37 @@
+
+<?php 
+
+// +----------------------------------------------------------------------+
+// | Fork PHP :: Controller                                               |
+// +----------------------------------------------------------------------+
+// | Copyright (c) 2013-2014 Fork PHP Team                                |
+// +----------------------------------------------------------------------+
+// | This source file is a Template for the Controller Class. It falls    |
+// | under MIT Licence. Code is generated via Module Manager.             |
+// +----------------------------------------------------------------------+
+// | Authors: Eshant Sahu <eshantsahu@forkphp.com>                        |
+// +----------------------------------------------------------------------+
+//
+
+/**
+* If you do not want to include this block in your code, You can modify it in the lib->template->controller
+* @author   Eshant Sahu <eshantsahu@forkphp.com>
+* @version  1.0.1.2
+* @access   public
+*/
+
+	class {{controllername}} extends Controller
+	{
+		public function __construct()
+		{
+			
+		}
+		public function indexAction()
+		{
+			// your code here
+			{{code}}
+
+		}
+		
+
+	}

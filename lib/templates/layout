@@ -1,0 +1,63 @@
+
+<?php
+// +----------------------------------------------------------------------+
+// | Fork PHP :: Layout                                                   |
+// +----------------------------------------------------------------------+
+// | Copyright (c) 2013-2014 Fork PHP Team                                |
+// +----------------------------------------------------------------------+
+// | This source file is a Template for the Default Layout. It falls      |
+// | under MIT Licence. Code is generated via Module Manager.             |
+// +----------------------------------------------------------------------+
+// | Authors: Eshant Sahu <eshantsahu@forkphp.com>                        |
+// +----------------------------------------------------------------------+
+//
+
+/**
+* If you do not want to include this block in your code, You can modify it in the lib->template->layout
+* @author   Eshant Sahu <eshantsahu@forkphp.com>
+* @version  1.0.1.2
+* @access   public
+*/
+
+// Basic Jquery & CSS files
+$this->appendJS("jquery.min.js");
+$this->appendJS("bootstrap.min.js");
+$this->appendJS("jquery.cookie.js");
+$this->appendJS("bootbox-4.1.0.min.js");
+$this->appendCSS("bootstrap.min.css");
+$this->appendCSS("bootstrap-theme.min.css");
+?>
+<style type="text/css">
+  .jumbotron {
+  text-align: center;
+  background-color: transparent;
+}
+.jumbotron .btn {
+  padding: 14px 24px;
+  font-size: 21px;
+}
+</style>
+<nav role="navigation" class="navbar navbar-inverse navbar-fixed-top" style="margin-bottom:0px;">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+    <button data-target=".navbar-ex1-collapse" data-toggle="collapse" class="navbar-toggle" type="button">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+      <span class="icon-bar"></span>
+    </button>
+    <a href="#" class="navbar-brand">{{modulename}} Module</a>
+  </div>
+
+  <!-- Collect the nav links, forms, and other content for toggling -->
+  <ul class="nav navbar-nav navbar-right navbar-user">
+    <li style="margin-right:10px;">
+        <a href="#"><label>Logout</label> </a>
+    </li>
+    </ul><!-- /.navbar-collapse -->
+</nav>
+<div class="Container" style="margin-top:70px;">
+  <div class="col-md-12  col-sm-12  col-xs-12 ">
+    <?php $this->view(); ?>
+  </div>
+</div>

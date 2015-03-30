@@ -1,0 +1,448 @@
+<div class="container-fluid">
+	<div class="cont">
+	<!-- <button data-target="#insertModal" data-toggle="modal" style="position:absolute;right:0;top:20px;" class="btn btn-info" style=""> <span class="glyphicon glyphicon-plus-sign"></span> Add Module</button> -->
+		<h3>Module Manager</h3>
+		<hr/>
+	<div class="module_manager modulecont col-md-12 col-lg-12 col-sm-12 col-xs-12" style="background: #F5F5F5;
+    padding: 10px 23px 20px;margin-bottom:55px;">
+	<h3>Select module</h3><!-- <button class='btn btn-info' data-toggle="modal" data-target="#addModuleModal" style='position:absolute;right:10px;top:30px;' > <span class='glyphicon glyphicon-plus-sign'></span> Add Module</button> -->
+	<p>Right click or Double click on module to explore it.</p>
+	<br/>
+	<?php
+
+		$mm = new ModuleManager("");
+		foreach ($mm->getAllModules() as $module)
+		{
+			//echo "<div class='col-md-3 col-sm-4 col-xs-9 module' name='".$module."'>$module</div>";
+			echo '<div class="col-md-3 col-sm-4 col-xs-9  small-box bg-blue module" name="'.$module.'">
+                    <div class="inner">
+                        <h3>
+                            '.$module.'
+                        </h3>
+                        <p>
+                            Module
+                        </p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-pie-graph"></i>
+                    </div>
+                    
+                  </div>';
+		}
+		echo '<div class="col-md-3 col-sm-4 col-xs-9 module small-box bg-blue add" data-toggle="modal" data-target="#addModuleModal">
+
+                    <div class="inner">
+                        <h3>
+                            Add
+                        </h3>
+                        <p>
+                            Module
+                        </p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion ion-plus"></i>
+                    </div>
+                    
+                  </div>';
+		/*foreach ($mm->getAllModules() as $module)
+		{
+			echo "<div class='col-md-2 col-sm-3 col-xs-5 module' name='".$module."'>$module</div>";
+		}*/
+		//echo "<div class='col-md-2 col-sm-3 col-xs-5 module' name=''>+</div>";
+	?>
+	</div>	
+	<div class="module_manager controllercont controllers col-lg-12 col-md-12 col-sm-12 col-xs-12" style="background: #F5F5F5;padding: 10px 23px 20px;margin-bottom:55px;">
+	
+	</div>	
+	<div class="module_manager actioncont actions col-lg-12 col-md-12 col-sm-12 col-xs-12" style="background: none repeat scroll 0 0 #F5F5F5;
+    padding: 10px 23px 20px;margin-bottom:55px;">
+	
+	</div>
+</div>
+<input type="hidden" id="currentModule">
+<input type="hidden" id="currentController">
+<script type="text/javascript">
+	$(function()
+	{
+		$(".module_manager .module").on('click',function()
+		{
+			$('.module_manager .module').removeClass('active');
+			$(this).addClass('active');
+		});
+		
+	});
+	 $('.module').bind("contextmenu", function(event) {
+
+	 	event.preventDefault();
+	 	if($(this).hasClass('add')){
+	 		return;
+	 	}
+	 	$('.module_manager .module').removeClass('active');
+	 	$('.dropdown-menu.custom-menu').remove();
+			$(this).addClass('active');
+	 	var folder = $(this).attr('name');
+		var html = "<ul class='dropdown-menu custom-menu'><li onclick=exploreModule('"+folder+"')><a href='#'><i class='glyphicon glyphicon-pencil'></i> Explore Module</a></li><li onclick=deleteModule('"+folder+"')><a href='#' title='Warning: Deleting a module may cause unexpected behaviour.'><i class='glyphicon glyphicon-trash'></i> Delete Module</a></li></ul>";
+		$(html)
+		.appendTo("body")
+		.css({top: event.pageY + "px", left: event.pageX + "px"}).show(); 
+		
+	 });
+	 
+	 $('.module').dblclick(function(){
+	 	exploreModule($(this).attr('name'));
+	 })
+	 function exploreModule(module)
+	 {
+	 	$("#currentModule").val(module);
+	 	$.ajax(
+	 	{
+	 		url:"<?php echo $this->appBase().'/admin/home/getModulesData';?>",
+	 		data:{module:module},
+	 		method:'POST',
+	 		success:function(data)
+	 		{
+	 			if(data.trim()!='-1')
+	 			{
+
+	 			var html="<h3>Controllers : "+module+" Module </h3><p>This module contains following Controllers : </p>";
+	 			var moduleData = $.parseJSON(data);
+	 			$.each(moduleData, function(index, controller){
+	 				
+ 						html +="<div class='col-md-3 col-sm-4 col-xs-9 controller small-box bg-green'  name='"+index+"'><div class='inner'><h3>"+index.replace('Controller','')+"</h3><p>Controller</p></div><div class='icon'><i class='fa fa-rocket'></i></div></div>";
+ 					
+			    });
+			    html +='<div class="col-md-3 col-sm-4 col-xs-9 controller small-box bg-green " data-toggle="modal" data-target="#addControllerModal" '+"module='"+module+"'"+'><div class="inner"><h3>Add</h3><p>Controller</p></div><div class="icon"><i class="ion ion-plus"></i></div></div>';
+			    $(".controllers").html(html);
+			    $(".controllers").show();
+			    $(".actions").hide();
+			    $(function(){
+			    	
+			    	$(".module_manager.controllers .controller").on('click',function()
+					{
+						
+						$('.module_manager .controller').removeClass('active');
+						$(this).addClass('active');
+					});
+					$('.controller').dblclick(function(){
+					 	exploreController(module,$(this).attr('name'));
+					 });
+					$('.controller').bind("contextmenu", function(event) {
+						
+					 	event.preventDefault();
+					 	$('.module_manager .controller').removeClass('active');
+							$(this).addClass('active');
+					 	var controller = $(this).attr('name');
+					 	var modulename = $("#currentModule").val();
+					 	//alert(controller+modulename)
+						var html = "<ul class='dropdown-menu custom-menu'><li onclick=exploreController('"+modulename+"','"+controller+"')><a href='#'><i class='glyphicon glyphicon-pencil'></i> Explore Controller</a></li><li onclick=deleteController('"+modulename+"','"+controller+"')><a href='#' title='Warning: Deleting a Controller may cause unexpected behaviour.'><i class='glyphicon glyphicon-trash'></i> Delete Controller</a></li></ul>";
+						$(html)
+						.appendTo("body")
+						.css({top: event.pageY + "px", left: event.pageX + "px"}); 
+					 });
+			    });
+			    
+	 			}
+	 		}
+	 	});
+		
+	 }
+	 function exploreController(module,controller)
+	 {
+	 	//alert(module+"_"+controller);
+	 	$("#currentController").val(controller);
+	 	$.ajax(
+	 	{
+	 		url:"<?php echo $this->appBase().'/admin/home/getControllersData';?>",
+	 		data:{module:module,controller:controller},
+	 		method:'POST',
+	 		success:function(data)
+	 		{
+
+	 			if(data.trim()!='-1')
+	 			{
+	 			var html="<h3>Actions : "+controller+" </h3><p>This Controller contains following Actions : </p>";
+	 			var controllerData = $.parseJSON(data);
+	 			$.each(controllerData, function(index, action){
+	 				
+ 						html +="<div class='action col-md-5' name='"+action+"'>"+action+"<div style='float:right'><a class='editfile' path='"+module+"/"+controller.replace('Controller','')+"/"+action.replace('Action','')+"'><span class='glyphicon glyphicon-edit' title='Edit in Code Editor' ></span></a><!--<span title='Delete Action' class='glyphicon glyphicon-trash'></span>--></div></div>";
+ 					
+			    });
+			   // html += "<div  class='action col-md-5 bg-white'><div class='inner'><p>Add Action <i class='ion ion-plus pull-ri'></i></p></div></div>";
+			    $(".actions").html(html);
+			    $(".actions").show();
+			    $(function(){
+			    	$(".module_manager.actions .action").on('click',function()
+					{
+						
+						$('.module_manager .action').removeClass('active');
+						$(this).addClass('active');
+					});
+					$('.action').dblclick(function(){
+					 	//exploreController(module,$(this).attr('name'));
+					 });
+					$('.editfile').click(function (){
+
+						window.open("<?php echo $this->appBase().'/admin/home/editor?edit=';?>"+$.base64.encode($(this).attr('path'),'popUpWindow'));
+					});
+			    });
+			    }
+	 		}
+	 });
+	
+	}
+	function deleteController(module,controller)
+	{
+		bootbox.confirm("Are you sure to delete "+controller+" : "+module+" Module ?",function(result)
+		{
+			if(result)
+			{
+				$.ajax(
+				{
+					url:"<?php echo $this->appBase().'/admin/home/deleteController'; ?>",
+					method:'POST',
+					data:{module:module,controller:controller},
+					success:function(data)
+					{
+						showStatus(data,"alert-info");
+						hideStatus(true,{'module':module});
+					}
+				});
+			}
+		});
+	}
+	function deleteModule(module)
+	{
+		bootbox.confirm("Are you sure to delete "+module+" Module ?",function(result)
+		{
+			if(result)
+			{
+				$.ajax(
+				{
+					url:"<?php echo $this->appBase().'/admin/home/deleteModule'; ?>",
+					method:'POST',
+					data:{module:module},
+					success:function(data)
+					{
+						showStatus(data,"alert-info");
+						hideStatus(true,null);
+					}
+				});
+			}
+		});
+	}
+	//showStatus("Creating",'alert-info');
+</script>
+<div class="modal fade" id="addModuleModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Add Module</h4>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+		    <label for="exampleInputEmail1">Module Name</label>
+		    <input type="text" class="form-control" id="moduleName" placeholder="Enter Module Name">
+		</div>
+	  <div class="checkbox">
+	    <label>
+	      <input type="checkbox" checked="checked" id="isSaperateLayout"> Create a Saperate layout for this module.
+	    </label>
+	  </div>
+	  <div class="checkbox">
+	    <label>
+	      <input type="checkbox" disabled="disabled" checked="checked" id="indexCont"> Create default Controller (indexController).
+	    </label>
+		    <div class="checkbox">
+		    <label>
+		      <input type="checkbox" checked="checked" id="isview"> Add view file (index.phtml).
+		    </label>
+		  </div>
+	  </div>	
+	      <p class="help-block">* We recommand to create a saperate layout for each Module. Add JS and CSS manually if not creating a saperate layout.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" id="createModule" class="btn btn-primary">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="addControllerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Add Controller</h4>
+      </div>
+      <div class="modal-body">
+	      	<div class="form-group">
+			    <label for="exampleInputEmail1">Controller Name</label>
+			    <input type="text" class="form-control" id="controllerName" placeholder="Enter Controller Name">
+			</div>
+		  	<div class="checkbox">
+		    <label>
+		      <input type="checkbox" disabled="disabled" checked="checked" > Create default Action (indexAction).
+		    </label>
+			    <div class="checkbox">
+			    <label>
+			      <input type="checkbox" checked="checked" id="addview"> Add view file (index.phtml).
+			    </label>
+			  </div>
+		  </div>	
+		    <!-- <p class="help-block">* We recommand to create a saperate layout for each Module. Add JS and CSS manually if not creating a saperate layout.</p> -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" id="createController" class="btn btn-primary">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="modal fade" id="addActionModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Add Action</h4>
+      </div>
+      <div class="modal-body">
+      	<div class="form-group">
+		    <label for="exampleInputEmail1">Action Name</label>
+		    <input type="text" class="form-control" id="CreateActionName" placeholder="Enter Action Name">
+		</div>
+	  	<div class="checkbox">
+		    <label>
+		      <input type="checkbox" id="addActionView"  checked="checked" > Create View file<a id="action_in_text"></a>.
+		    </label>
+		</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+        <button type="button" id="createAction" class="btn btn-primary">Create</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+	$("#createModule").click(function()
+	{
+
+		var re = /^[A-Za-z_]+$/;
+		var module = $("#moduleName").val();
+		var view = $("#isview").prop('checked');
+		if(!re.test(module))
+		{
+			bootbox.alert("Invalid Module Name.Module name can contain only [a-z], [A-Z] or underscores('_').");
+			return false;
+		}
+		var isSaperateLayout = $("#isSaperateLayout").prop('checked');
+		
+		
+		$.ajax({
+			url:"<?php echo $this->appBase().'/admin/home/createModule'; ?>",
+			method:'POST',
+			data:{module:module,layout:isSaperateLayout,view:view},
+			beforeSend:function(){
+				showStatus("Creating Module <b>"+module+"</b>","alert-info");
+			},
+			success:function(data)
+			{
+				bootbox.alert(data,function(){
+					hideStatus(true,{'module':module});
+				});
+				$("#addModuleModal").modal('hide');
+			}
+		});
+	});
+	$("#createController").click(function()
+	{
+
+		var re = /^[A-Za-z0-9_]+$/;
+		var module = $("#currentModule").val();
+
+		var controller = $("#controllerName").val();
+		var view = $("#addview").prop('checked');
+		if(!re.test(controller))
+		{
+			bootbox.alert("Invalid Controller Name.Controller name can contain only [a-z], [A-Z], [0-9] or underscores('_').");
+			return false;
+		}
+		showStatus("Adding Controller "+controller,"alert-info");
+		//alert(module+controller+view)
+		$.ajax({
+			url:"<?php echo $this->appBase().'/admin/home/createController'; ?>",
+			method:'POST',
+			data:{module:module,controller:controller,view:view},
+			success:function(data)
+			{
+				bootbox.alert(data,function(){
+					hideStatus(true,{'module':module,'controller':controller});
+				});
+				showStatus(data,"alert-info");
+				$("#addControllerModal").modal('hide');
+				//alert(data);
+				
+				
+			}
+		});
+	});
+
+	$("#createAction").click(function()
+	{
+
+		var re = /^[A-Za-z0-9_]+$/;
+		var module = $("#currentModule").val();
+		var controller = $("#currentController").val();
+		var action = $("#CreateActionName").val();
+		var view = $("#addActionView").prop('checked');
+		//alert(module+controller+action)
+		if(!re.test(action))
+		{
+			bootbox.alert("Invalid Action Name.Action name can contain only [a-z], [A-Z], [0-9] or underscores('_').");
+			return false;
+		}
+		showStatus("Adding Action "+action,"alert-info");
+		
+		$.ajax({
+			url:"<?php echo $this->appBase().'/admin/home/createAction'; ?>",
+			method:'POST',
+			data:{module:module,controller:controller,action:action,view:view},
+			success:function(data)
+			{
+				showStatus(data,"alert-info");
+				$("#addActionModal").modal('hide');
+				$(".actioncont").css({'display':'block'});
+				hideStatus(true,{'module':module,'controller':controller});
+			}
+		});
+	});
+	$("#CreateActionName").keyup(function(){
+		if($(this).val().length==0)
+		{
+			$("#action_in_text").html("");
+		}
+		else
+		$("#action_in_text").html("("+$(this).val()+".phtml"+")");
+	});
+	$(document).ready(function(){
+		var module=getURLParameter('module');
+			//alert(getURLParameter('module'))
+		if(getURLParameter('module')!=null)
+		{
+			var module=getURLParameter('module');
+			//alert(module)
+			exploreModule(module);
+			
+			//location.search="";
+		}
+		if(getURLParameter('controller')!=null)
+		{
+			//alert(getURLParameter('controller'))
+			exploreController(module,getURLParameter('controller'));
+			$(".actioncont").css({'display':'block'});
+		}
+
+	});
+	
+</script>

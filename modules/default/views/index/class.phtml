@@ -1,0 +1,105 @@
+<div class="content-section-a">
+    <div class="container">
+		<div class="row">
+			<div class='col-lg-12'>
+				<h1> API Reference: Fork PHP 1.0</h1>
+				<hr/>
+			</div>
+			<div class="col-lg-2">
+			<?php echo "<a class='list-group-item list-group-item-success' href='".$this->appBase()."/document' style='background:'>Overview</a>"; ?>
+				<div class='list-group'>
+				<?php
+					
+					foreach ($this->view['classList'] as $class) {
+						# code...
+						$active = (isset($this->view['classData']) && $this->view['classData']->name == $class->name)?"active":"";
+						echo "<a class='list-group-item $active' href='".$this->appBase()."/document/class/".$class->name."'>".$class->name."</a>";
+					}
+				?>
+				</div>
+			</div>
+			<div class="col-lg-10 doc_con"  style="background:#fff;">
+			<?php 
+				if(isset($this->view['classData'])){
+			?>
+				<h2 style="text-transform:capitalize;"> <?php echo $this->view['classData']->name; ?> Class</h2>
+
+				<div>
+					<p>
+						<?php echo $this->view['classData']->description; ?>
+					</p>
+					<h3>Properties</h3>
+					<p><?php echo $this->view['classData']->properties; ?></p>
+					<h3>Parent Class</h3>
+					<p><?php echo (!empty($this->view['classData']->parent_class))?$this->view['classData']->parent_class:"None"; ?></p>
+					<h3>File Path</h3>
+					<p><?php echo str_replace("C:\\xampp\\htdocs\\fpmain","",$this->view['classData']->file_name); ?></p>
+					<?php 
+					//print_r($this->view['classData']);
+					?>
+
+				</div>
+				<?php 
+				echo "<h2>Methods</h2>";
+				foreach ($this->view['methodData'] as $method) {
+					echo "<div class='method'>";
+					echo "<h3> $method->name () </h3>";
+					echo "<br/>";
+					echo "<p> $method->description </p>";
+					echo "<h3> Parameters </h3>";
+					echo "<p> $method->parameters </p>";
+					echo "<h3> Definition </h3>";
+					echo "<pre><code class='language-php'> ".htmlentities(base64_decode($method->code))."</code></pre>";
+					
+					echo "</div>";
+				//	print_r($method);
+				}
+			}else{
+				?>
+
+                <h2> Overview </h2>
+                
+                <p>
+                    Fork PHP is a MVC / Core PHP Framework with Updated programming techniques, Strong Library for developing web applications and services using PHP 5.3+.It is purely object oriented. We have tried our best to
+                    make development task as easier as possible.
+                </p>
+				<?php
+
+			}
+				?>
+			
+				  <div id="disqus_thread"></div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<style type="text/css">
+	.method{padding: 5px; border: solid 1px gray;margin-bottom: 10px;position: relative;}
+	pre{max-height:250px;overflow: auto;}
+	
+</style>
+   <script type="text/javascript">
+        /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+        var disqus_shortname = 'fpmain'; // required: replace example with your forum shortname
+
+        /* * * DON'T EDIT BELOW THIS LINE * * */
+        (function() {
+            var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+      <script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES: EDIT BEFORE PASTING INTO YOUR WEBPAGE * * */
+    var disqus_shortname = 'fpmain'; // required: replace example with your forum shortname
+
+    /* * * DON'T EDIT BELOW THIS LINE * * */
+    (function () {
+        var s = document.createElement('script'); s.async = true;
+        s.type = 'text/javascript';
+        s.src = '//' + disqus_shortname + '.disqus.com/count.js';
+        (document.getElementsByTagName('HEAD')[0] || document.getElementsByTagName('BODY')[0]).appendChild(s);
+    }());
+    </script>

@@ -1,0 +1,307 @@
+<script type="text/javascript">
+        $(document).ready(function(){
+            $("#browser").treeview();
+        });
+    </script>
+ <div class="content-section-a">
+
+        <div class="container">
+
+            <div class="row">
+            <h1 >Tutorials for Fork PHP</h1>
+            <hr/>
+                <div class="col-lg-2 table_content">
+                    <h4>Table of Contents</h4>
+                    <div class="list-group">
+                      <a href="#" class="list-group-item active">
+                        Overview
+                      </a>
+                      <a href="#project_structure" class="list-group-item">Project Structure </a>
+                      <a href="#description" class="list-group-item">Description</a>
+                      <a href="#" class="list-group-item">Discussion</a>
+                    </div>
+
+                </div>
+                <div class="col-lg-10 doc_con"  style="background:#fff;">
+                   
+                    <h2> Overview </h2>
+                    <p>
+                         This document provides the overview of Fork PHP Framework.As before trying a new dish, Its important to read its racipe, similarly you have to go through this document 
+                         before start your development with Fork PHP. We have tried our best to make this document concise. 
+                    </p>
+                    <p>
+                        Fork PHP is a MVC / Core PHP Framework with Updated programming techniques, Strong Library for developing web applications and services using PHP 5.3+.It is purely object oriented. We have tried our best to
+                        make development task as easier as possible.
+                    </p>
+                    <p class="lead">What is a MVC Framework ??</p>
+                    <p>
+                        <strong>Model–view–controller (MVC) </strong>is a software pattern for implementing user interfaces. It divides a given software application into three interconnected parts, so as to separate internal representations of information from the ways that information is presented to or accepted from the user.
+                        <br/>
+                        <strong>Modal : </strong>The central component, the model, consists of application data, business rules, logic, and functions.
+                        <br/>
+                        <strong>View : </strong> A view can be any output representation of information, such as a chart or a diagram. Multiple views of the same information are possible, such as a bar chart for management and a tabular view for accountants.
+                        <br/>
+                        <strong>Controller : </strong> The third part, the controller, accepts input and converts it to commands for the model or view.
+                        <br/>
+                    </p>
+                    <p>
+                        Using this development pattern allows for very easy maintenance, as well as independent development of pieces of the same system by different programmers, which makes for quick turnover of applications all while still maintaining a very high standard of quality for the application.
+                    </p>
+                    <!-- <pre><code class="language-css">p { color: red }</code></pre> -->
+
+                    <br/>
+                    <h2 id='project_structure'>Project Structure</h2>
+                    <p>
+                        Fork PHP project structure is dependent to itself. It means we have defined some protocols for structuring the files and folders. This structure is defined with concern to provide support to developers.
+                    </p>
+                    <ul id="browser" class="filetree">
+                        <li><span class="folder">App</span>
+                            <ul>
+                                <li><span class="file"> Application.ini </span></li>
+                                <li><span class="file"> Exceptions.ini </span></li>
+                            </ul>
+                        </li>
+                        <li><span class="folder">Lib</span>
+                            <ul>
+                                <li class="closed"><span class="folder">Entities</span>
+                                    <ul id="folder21">
+                                        <li><span class="file">Fork_admin.php</span></li>
+                                    </ul>
+                                </li>
+                                <li><span class="file">Config.php</span></li>
+                                <li><span class="file">Controls.php</span></li>
+                                <li><span class="file">EntityFramework.php</span></li>
+                                <li><span class="file">Framework.php</span></li>
+                            </ul>
+                        </li>
+                        <li><span class="folder">Modules</span>
+                            <ul>
+                                <li class="closed"><span class="folder">Admin</span>
+                                    <ul>
+                                        <li><span class="folder">Controllers</span>
+                                            <ul id="">
+                                                <li><span class="file">loginController.php</span></li>
+                                                <li><span class="file">indexController.php</span></li>
+                                                <li><span class="file">homeController.php</span></li>
+                                            </ul>
+                                        </li>
+                                        <li><span class="folder">Views</span>
+                                            <ul id="">
+                                                <li><span class="folder">home</span>
+                                                    <ul>
+                                                        <li><span class="file">index.phtml</span></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                            <ul id="">
+                                                <li><span class="folder">index</span>
+                                                    <ul>
+                                                        <li><span class="file">index.phtml</span></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                            <ul id="">
+                                                <li><span class="folder">login</span>
+                                                    <ul>
+                                                        <li><span class="file">index.phtml</span></li>
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li><span class="folder">Layouts</span>
+                            <ul>
+                                <li class="closed"><span class="folder">Controllers</span>
+                                    <ul>
+                                        <li><span class="file">adminlayoutController.php</span></li>
+                                    </ul>
+                                </li>
+                                <li><span class="file">admin.phtml</span></li>
+                            </ul>
+                        </li>
+                        <li class="closed"><span class="folder">Site</span>
+                            <ul>
+                                <li><span class="folder">css</span>
+                                    <ul>
+                                        
+                                    </ul>
+                                </li>
+                                <li><span class="folder">js</span>
+                                    <ul>
+                                        
+                                    </ul>
+                                </li>
+                                <li><span class="folder">img</span>
+                                    <ul>
+                                        
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                 
+                 <h3 id="description">Description</h3>
+                 
+                 <div class="'col-md-12 col-sm-12" >
+                 <h4> 1) App</h4>
+                 <p>This folder contains the configuration files for the project.</p>
+                 
+                 <h5>a) Application.ini  : Basic Configuration for the project</h5>
+                 <pre>
+                     <code class="  language-javascript">
+        [App]
+application = "Fork PHP"
+application.environment = "development"
+phpSettings.display_errors = "1"
+
+[db]
+db[names] = "maindb,forkadmin"
+mysql.maindb.adapter = "PDO_MYSQL"
+mysql.maindb.username = "USER_NAME"
+mysql.maindb.dbname = "fpmain"
+mysql.maindb.host = "HOST_NAME"
+mysql.maindb.password = "PASSWORD"
+mysql.forkadmin.adapter = "PDO_MYSQL"
+mysql.forkadmin.username = "USER_NAME"
+mysql.forkadmin.dbname = "DATABASE_NAME"
+mysql.forkadmin.host = "HOST_NAME"
+mysql.forkadmin.password = "PASSWORD"
+
+[users]
+users.class = "users"
+
+[layouts]
+layouts[default] = "default"
+layouts[admin] = "adminLTE"
+
+
+[plugins]
+plugins[names] = "webservice,modulemanager"
+plugins[webservice.enable] = "1"
+plugins[webservice.text] = "Web Services"
+plugins[webservice.module] = "webservice"
+plugins[webservice.url] = "admin/webservices"
+plugins[modulemanager.enable] = "1"
+plugins[modulemanager.text] = "Module Manager"
+plugins[modulemanager.url] = "admin/home/modulemanager"
+
+[settings]
+settings[debuginfo] = "1"
+
+                     </code>
+                 </pre>
+                 </div>
+                
+                <div class="'col-md-12 col-sm-12" >    
+                <h5>b)  Exceptions.ini : Exceptions defined for the project</h5>
+                <pre>
+                    <code class="  language-javascript">
+[Exceptions]
+UNDEFINED_MODULE_EXCEPTION="The Module %s was not found."
+CONTROLLER_CLASS_EXCEPTION="The Controller Class <b>%s</b> was not found in <b>%s</b> Module."
+UNDEFINED_CONTROLLER_EXCEPTION="Undefined Controller <b>%s</b> in <b>%s</b> Module."
+UNDEFINED_ACTION_EXCEPTION="Undefined Action <b>%s</b> in <b>%s</b> Controller : <b>%s</b> Module."
+MISSING_VIEW_FILE="Missing view file <b>%s.phtml</b> for <b>%s</b> Action in <b>%s</b> Controller : <b>%s</b> Module.If you don't want to use view for this action, try to set <b>viewRequired</b> property of Action as false."
+MISSING_PARTIAL_VIEW_FILE="Missing partial view file <b>%s.phtml</b> called in <b>%s</b> of <b>%s</b> Action,  <b>%s</b> Controller : <b>%s</b> Module."
+MISSING_LAYOUT_FILE="The layout file <b>%s.phtml</b> was not found."
+INVALID_VIEW_ACCESS="Invalid call to view method from layout.viewRequired property is set to false from Action Call %s in %s Controller."
+INVALID_VIEW_PARAMS="Parameters passed to view in ajax call of %s Action of %s Controller : %s Module."
+
+                        </code>
+                    </pre>
+                    <p>We will explain you in next section, how you can define custom Exceptions.</p>
+                </div>
+                
+                <div class="'col-md-12 col-sm-12">
+                <h4>2)  Lib</h4>
+                <p>
+                    This folder contains the various libraries included in fork PHP package. Initially we have added PHP Controls and Entity Framework Library.
+                </p>
+                    <h5>a)  Entity</h5>
+                    <p>This folder contains the Entity Classes files generated by Entity Generator. A Simple Entity file may look like  </p>
+                    <pre >
+                    <code class="language-php"> 
+
+        class users extends EntityFramework
+        {
+            private $id;
+            private $username;
+            private $password;
+            private $token;
+            function __construct()
+            {
+                $class = __CLASS__;
+                parent::__construct("forkAdmin",$class);
+            }
+
+          public function __get($property) {
+            if (property_exists($this, $property)) {
+              return $this->$property;
+            }
+          }
+
+          public function __set($property, $value) {
+            if (property_exists($this, $property)) {
+              $this->$property = $value;
+            }
+
+            return $this;
+          }
+            
+        }
+                    </code>
+            </pre>
+            <br/>
+                </div>
+
+                
+                <div class="'col-md-12 col-sm-12">
+                <h4>3)  Modules</h4>
+                    <p>
+                    This is the main development folder. It contains all the Modules and their all corresponding files. In Fork PHP, We have defined modals as centralized Entities. It means there are multiple modules accessing DB through same Modals. Also with the Entity Framework, We have tried our best to provide the data as an Object. 
+                    </p>
+                    <div style="text-align:-moz-center;">
+                    <img src="<?php echo $this->baseUrl().'/img/modals.png'; ?>" style="height:436px;" class="img-responsive">
+                    </div>
+                    <p>A Module folder contains two child folders:</p>
+                    <h5>a)  Controllers</h5>
+                    <h5>b)  Views</h5>
+                    <p>
+                    The <strong>controller</strong> and <strong>modal</strong> files are of *.php extension, whereas views are *.phtml extension.
+                    <br/>
+                    (To learn how to define modals, views and controllers, look in next section.)
+
+                    </p>
+                    <ul>
+                        <li>The <strong>controller</strong> files have naming convention like <strong>[CONTROLLER_NAME].php</strong> file:  <br/>
+                        Example: Controller file’s names would be like <strong>indexController</strong> &amp; <strong>adminController</strong> where name of controllers are <strong>index</strong> &amp; <strong>admin</strong> respectively.
+                        </li>
+                        <li>
+                        The <strong>views</strong> folder contains <strong>subfolders</strong> with the name of Corresponding <strong>Controller</strong>, and each <strong>acti</strong> has been defined as a <strong>view</strong> file with name like <strong>[ACTION_NAME].phtml</strong> file.
+                        </li>
+                        <li>
+                        The <strong>modal</strong> Classes are situated in <strong>modals</strong> folder with name like <strong>[MOADL_NAME].php</strong>
+                        </li>
+                    </ul>
+                    <br/>
+                    <h4>4) Site</h4>
+                    <p>This folder contains the all static files for the project including css, javascript and img files. There are subfolders named as</p>
+                    <ul>
+                        <li>css</li>
+                        <li>js</li>
+                        <li>img</li>
+                    </ul>
+                    <p> The style sheets and javascript files are placed in these static folders respectively. Also the developers can place their subfolders to create hierarchy in project.</p>
+                </div>
+                
+                </div>
+                
+            </div>
+
+        </div>
+        <!-- /.container -->
+
+    </div>

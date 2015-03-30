@@ -1,0 +1,575 @@
+<?php
+          function ListFolder($path)
+          {
+              //using the opendir function
+              $dir_handle = @opendir($path) or die("Unable to open $path");
+             
+              //Leave only the lastest folder name
+              $dirname = @end(@explode("/", $path));
+              
+              //display the target folder.
+              $relative = $_SERVER['DOCUMENT_ROOT']."/".$GLOBALS['host'];
+              $modPath = str_replace($relative, "", $path);
+              echo ("<li class='treeview'><a href='#'>
+                                <i class='fa fa-folder'></i><span class='folder' ondblclick=renamefolder('".$modPath."') folder=$modPath>$dirname</span>
+                                <i class='fa pull-right fa-angle-down'></i>
+                            </a>\n");
+              echo "<ul class='treeview-menu'>\n";
+              $stack = array();
+              while (false !== ($file = readdir($dir_handle)))
+              {
+                  if($file!="." && $file!="..")
+                  {
+                      if (is_dir($path."/".$file))
+                      {
+                          //Display a list of sub folders.
+                          ListFolder($path."/".$file);
+                      }
+                      else
+                      {
+                          //Display a list of files.
+                          $f =str_replace($relative, "", $path)."/".$file;
+                          $ext = pathinfo($path."/".$file,PATHINFO_EXTENSION);
+                          //if(in_array($ext,  array('php','html','phtml','php','gif','bmp','png','htaccess','js','css','txt')))
+                          $stack[]= "<li> <i class='fa fa-file'></i><span class=$ext><a onclick=\"addTab('".str_replace(".","_", $file)."','".$ext."','".$f."')\" file=$f ext=$ext>$file</a></span></li>";
+                      }
+                  }
+              }
+              foreach ($stack as $value)
+              {
+                echo $value;
+              }
+              echo "</ul>\n";
+              echo "</li>\n";
+             
+              //closing the directory
+              closedir($dir_handle);
+          }
+          echo "<div style='background:#414141;color:#fff;font-weight:bold;text-align:center;height:40px;line-height:40px'><span class='home'></span>File Manager</div>";
+          echo "<ul id='browser' class='sidebar-menu'>
+          ";
+
+          ListFolder($_SERVER['DOCUMENT_ROOT']."/".$GLOBALS['host']);
+          echo "</ul>";
+        ?>
+
+<script type="text/javascript">
+
+function addfile (folder) {
+  bootbox.prompt("Enter file name with extension( i.e. *.html)", function(result) {
+  if (result === null) {
+  
+  } else {
+    if(result.length ==0)
+    {
+      bootbox.alert("File name can't be null.");
+      return false;
+    }
+    else
+    {
+      showStatus("Creating file "+result,"alert-info");
+      $.ajax(
+      {
+        
+        url:"<?php echo $this->appBase().'/admin/fileManager/addfile'; ?>",
+        data:{folder:folder,name:result},
+        method:'POST',
+        success:function(data)
+        {
+          hideStatus(true);
+        }
+      });
+    }
+  }
+  });
+  
+}
+function addfolder(folder)
+{
+  bootbox.prompt("Enter folder Name", function(result) 
+  {
+    if (result === null) 
+    {
+    
+    } 
+    else
+    {
+      if(result.length ==0)
+      {
+        bootbox.alert("Folder name can't be empty.");
+        return false;
+      }
+      else
+      {
+        $.ajax(
+        {
+          url:"<?php echo $this->appBase().'/admin/fileManager/addfolder'; ?>",
+          data:{folder:folder,name:result},
+          method:'POST',
+          success:function(data)
+          {
+            bootbox.alert(data,function(){window.location.reload();
+            });
+          }
+        });
+      }
+    }
+  });
+ }
+ function delfolder(folder)
+ {
+    bootbox.confirm("Are you sure to delete folder ?", function(result) 
+  {
+    if (result === null) 
+    {
+    
+    } 
+    else
+    {
+      if(result)
+      {
+        $.ajax(
+        {
+          url:"<?php echo $this->appBase().'/admin/fileManager/delfolder'; ?>",
+          data:{folder:folder,name:result},
+          method:'POST',
+          success:function(data)
+          {
+            bootbox.alert(data,function(){window.location.reload();});
+          }
+        });
+      }
+    }
+  });
+ }
+ 
+ function renamefolder(folder)
+ {
+  //var folder = $(this).attr('folder');
+  bootbox.prompt("Enter new Name for the folder "+folder, function(result) {
+  if (result === null) {
+  
+  } else {
+    /*if(result.length ==0)
+    {
+      bootbox.alert("File name can't be null.");
+      return false;
+    }
+    else
+    {
+      showStatus("Creating file "+result,"alert-info");
+      $.ajax(
+      {
+        
+        url:"<?php echo $this->appBase().'/admin/fileManager/addfile'; ?>",
+        data:{folder:folder,name:result},
+        method:'POST',
+        success:function(data)
+        {
+          hideStatus(true);
+        }
+      });
+    }*/
+    alert(result)
+  }
+  });
+ }
+ 
+</script>
+
+<script type="text/javascript">
+ $.ajax({
+       type: "POST",
+       url: "<?php echo $this->appBase().'/admin/profile/getProfile'; ?>",
+       success: function(jdata)
+       {
+        var data = $.parseJSON(jdata);
+        $("#userName").text(data['name']);
+        
+       }
+    }); 
+ $('.folder').bind("contextmenu", function(event) {
+    event.preventDefault();
+    var folder = $(this).attr('folder');
+    var html = "<div class='custom-menu'><ul><li class='new_file'>New File</li><li class='new_folder'>New Folder</li><li class='delete_folder'>Delete Folder</li></ul></div>";
+    var html = "<ul class='dropdown-menu custom-menu'><li id='new_file' onclick=addfile('"+folder+"')><a href='#'><i class='glyphicon glyphicon-plus'></i> New File</a></li><li id='new_folder' onclick=addfolder('"+folder+"')><a href='#'><i class='glyphicon glyphicon-plus'></i> New Folder</a></li><li onclick=renamefolder('"+folder+"')><a href='#'><i class='glyphicon glyphicon-pencil'></i> Rename Folder</a></li><li onclick=delfolder('"+folder+"')><a href='#'><i class='glyphicon glyphicon-trash'></i> Delete Folder</a></li></ul>";
+    $(html)
+        .appendTo("body")
+        .css({top: event.pageY + "px", left: event.pageX + "px"});
+});
+ $(document).bind("click", function(event) {
+    $("ul.custom-menu").remove();
+
+});
+
+
+</script>
+
+
+<script type="text/javascript">
+
+function addfile (folder) {
+  bootbox.prompt("Enter file name with extension( i.e. *.html)", function(result) {
+  if (result === null) {
+  
+  } else {
+    if(result.length ==0)
+    {
+      bootbox.alert("File name can't be null.");
+      return false;
+    }
+    else
+    {
+      showStatus("Creating file "+result,"alert-info");
+      $.ajax(
+      {
+        
+        url:"<?php echo $this->appBase().'/admin/fileManager/addfile'; ?>",
+        data:{folder:folder,name:result},
+        method:'POST',
+        success:function(data)
+        {
+          hideStatus(true);
+        }
+      });
+    }
+  }
+  });
+  
+}
+function addfolder(folder)
+{
+  bootbox.prompt("Enter folder Name", function(result) 
+  {
+    if (result === null) 
+    {
+    
+    } 
+    else
+    {
+      if(result.length ==0)
+      {
+        bootbox.alert("Folder name can't be empty.");
+        return false;
+      }
+      else
+      {
+        $.ajax(
+        {
+          url:"<?php echo $this->appBase().'/admin/fileManager/addfolder'; ?>",
+          data:{folder:folder,name:result},
+          method:'POST',
+          success:function(data)
+          {
+            bootbox.alert(data,function(){window.location.reload();
+            });
+          }
+        });
+      }
+    }
+  });
+ }
+ function delfolder(folder)
+ {
+    bootbox.confirm("Are you sure to delete folder ?", function(result) 
+  {
+    if (result === null) 
+    {
+    
+    } 
+    else
+    {
+      if(result)
+      {
+        $.ajax(
+        {
+          url:"<?php echo $this->appBase().'/admin/fileManager/delfolder'; ?>",
+          data:{folder:folder,name:result},
+          method:'POST',
+          success:function(data)
+          {
+            bootbox.alert(data,function(){window.location.reload();});
+          }
+        });
+      }
+    }
+  });
+ }
+ function renamefolder(folder)
+ {
+  //var folder = $(this).attr('folder');
+  bootbox.prompt("Enter new Name for the folder "+folder, function(result) {
+  if (result === null) {
+  
+  } else {
+    /*if(result.length ==0)
+    {
+      bootbox.alert("File name can't be null.");
+      return false;
+    }
+    else
+    {
+      showStatus("Creating file "+result,"alert-info");
+      $.ajax(
+      {
+        
+        url:"<?php echo $this->appBase().'/admin/fileManager/addfile'; ?>",
+        data:{folder:folder,name:result},
+        method:'POST',
+        success:function(data)
+        {
+          hideStatus(true);
+        }
+      });
+    }*/
+    alert(result)
+  }
+  });
+ }
+
+ 
+var globalTabs = [];
+var tabCount=1;
+$(document).ready(function()
+{
+  $("#editorTab").on('click','span.tab_close_btn',function()
+  {
+    
+    var current = $(this).parent().attr("href");
+    var name = $(this).prev().html().replace(".","_");
+    var ext = $(this).prev().attr('ext');
+    var path = $(current).attr('file');
+    /*alert(name+"#"+path)*/
+    globalTabs = $.grep(globalTabs, function(value) {
+        return value != name+"#"+ext+"#"+path;
+      });
+    $.cookie("tabs",globalTabs.join());
+    currentIndex = $(this).parent().parent().index();
+
+
+    $(current).remove();
+    $(this).parent().parent().remove();
+    if(currentIndex >0)
+      $("#editorTab li:eq("+(--currentIndex)+") a").click();
+    else if($("#editorTab li").length>0){
+      $("#editorTab li:eq(0) a").click();
+    }
+  });
+  $('#editorBody').on('click','.saveBtn',function () {
+    //alert('hh')
+
+      var btn = $(this); 
+      btn.button('loading');
+      var id = $(this).attr('id').replace("saveBtn","");
+      
+      var saveFile = $("#tab"+id).attr('file');
+      //var saveContent = $("#text"+id).val();
+      
+      var saveContent = editorA[parseInt(id)].getValue();
+      //alert(d);
+      //return;
+      $.ajax(
+        {
+          url:"<?php echo $this->appBase().'/admin/home/saveFile'; ?>",
+          data:{file:saveFile,content:saveContent},
+          method:'POST',
+          beforeSend:function(){
+            showStatus("Updating file content :  "+saveFile,"alert-info");
+          },
+          success:function(data){
+            if(data !=1)
+            {
+              bootbox.alert(data);
+
+            }
+            hideStatus();
+          }
+        }).always(function () {
+        btn.button('reset');
+      });
+    });
+    /*$('.container').on('change','.code',function(){
+      alert('h');
+
+    });*/
+    });
+  
+var syntaxArray=new Array();
+syntaxArray["js"]="javascript";
+syntaxArray["htaccess"]="text/html";
+syntaxArray["css"]="text/css";
+syntaxArray["htaccess"]="text/turtle";
+syntaxArray["php"]="application/x-httpd-php";
+syntaxArray["phtml"]="application/x-httpd-php";
+syntaxArray["ini"]="text/x-ini";
+var editorA = Array();
+tabCount = globalTabs.length+1;
+function addTab(name,ext,path,index)
+{
+  tabCount = globalTabs.length+1;
+  //console.log(tabCount)
+  if(index !=undefined && index !='' && index>0 )
+  {
+    var oun = index;
+  }
+  else
+  {
+    var oun = tabCount++;
+  }
+  //alert('File '+name+'.'+ext+' is open now.');
+  if($.inArray(name+"#"+ext+"#"+path, globalTabs)===-1)
+  {
+    
+  var tabHead = "<li><a href='#tab"+oun+"' data-toggle='tab'><span ext='"+ext+"' class='name'>"+name.replace('_','.')+"</span><span class='tab_close_btn close' title='close'>x</span></a></li>";
+  var content;
+  if('jpg' == ext  || 'jpeg' == ext || 'png' ==ext ||  'JPG' == ext ||  'JPEG' == ext || 'PNG' == ext || 'gif' == ext){
+     var tabBody = "<div class='tab-pane' file='"+path+"' id='tab"+oun+"'><div class='col-md-12'><img  style='max-height:350px;width:100%' src='<?php echo $this->appBase();?>"+path+"' /></div></div>";
+     $("#editorTab").append(tabHead);
+      $("#editorBody").append(tabBody);
+      
+      globalTabs.push(name+"#"+ext+"#"+path); // tab used with cookies to restore.
+      
+      var mode = syntaxArray[ext];
+      //alert(mode);
+      var syntax = syntaxArray[ext];
+      //alert(ext+"**"+syntax);
+      
+      $.cookie("tabs",globalTabs.join());
+      
+     
+  }else{
+
+  $.ajax({
+    url:"<?php echo $this->appBase().'/admin/home/loadFile';?>",
+    data:{url:path,ext:ext},
+    method:'POST',
+    success:function(data){
+      //alert(oun+"__"+data)
+      content = data.trim();
+      $("#tab"+oun).remove(); // re-verify for non-existance of same div
+        var saveButton = "<button type='button' data-loading-text='Saving...' class='btn btn-primary saveBtn' style='margin-top:20px;margin-left:10px;' id='saveBtn"+oun+"'>Save</button>";
+        var tabBody = "<div class='tab-pane' file='"+path+"' id='tab"+oun+"'><textarea class='code'  id='text"+oun+"'></textarea>"+saveButton+"</div>";
+      
+      
+
+      $("#editorTab").append(tabHead);
+      $("#editorBody").append(tabBody);
+      
+      globalTabs.push(name+"#"+ext+"#"+path); // tab used with cookies to restore.
+      
+      var mode = syntaxArray[ext];
+      //alert(mode);
+      var syntax = syntaxArray[ext];
+      //alert(ext+"**"+syntax);
+      
+      $.cookie("tabs",globalTabs.join());
+      
+      editorA[oun] = CodeMirror.fromTextArea(eval("text"+oun), {
+        lineNumbers: true,
+          theme: "default",
+            mode:  mode,
+            extraKeys: {
+                  "F11": function(cm) {
+                    cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    $(".navbar-fixed-top").toggle();
+                  },
+                  "Esc": function(cm) {
+                    if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                    $(".navbar-fixed-top").toggle();
+                  }
+                }
+      });
+      editorA[oun].setValue(content)
+      editorA[oun].setSize('100%','510');
+      $("#editorTab li").each(function(index,obj){
+        if($(this).children().children(":first-child").text().replace('.','_') == name){
+          console.log(index);
+          $("#editorTab li:eq("+index+") a").click();
+        }
+
+       });
+        }
+  });
+  }
+  }
+  else{
+    $("#editorTab li").each(function(index,obj){
+        if($(this).children().children(":first-child").text().replace('.','_') == name){
+          console.log(index);
+          $("#editorTab li:eq("+index+") a").click();
+        }
+
+    });
+  }
+
+  }
+$(function(){
+   if($.cookie('tabs'))
+  {
+
+   // if($("#editorTab").length>0)
+    
+      var tabsValue = $.cookie("tabs").split(",");
+      var i=1;
+    $.each( tabsValue, function(index,value)
+    {
+      if(value.length>0)
+      {
+          console.log("in loop"+(index+1))
+        var tabContent = value.split("#");
+        addTab(tabContent[0],tabContent[1],tabContent[2],index+1);
+        // if(i==tabsValue.length)
+        // {
+        //   getfiles();
+        // }
+       // i++;
+      }
+    });
+    
+    
+  }
+})
+$(document).ready(function()
+{
+  $('#editorTab').on("dblclick","li",function(){});
+  $('#editorTab').on("click","li",function(){
+  
+  var id = $(this).children('a').attr('href').replace('#tab','');
+
+  id = parseInt(id);
+  //editorA[id].refresh();
+  /*
+  console.log("fired");
+  alert('editorA['+id+'].focus();');*/
+  $("#text"+id).show(function(){
+    editorA[id].focus();
+    editorA[id].refresh();
+  });
+
+      $("#text"+id).hide();
+       setTimeout(function(){$("#text"+id).hide();}, 1000);
+      /*editorA[id].focus();
+      
+      editorA[id].refresh();*/
+         /* var e = jQuery.Event("keypress");
+          e.which = 13; //choose the one you want
+          e.keyCode = 13;
+          $("#text"+id).trigger(e);*/
+  });
+});
+$(document).bind('keydown', function(event) {
+    if ((event.ctrlKey) &&(String.fromCharCode(event.which).toLowerCase()=='s')) {
+        
+        alert('sabe')
+        var btnId = $("#editorTab li.active a").attr('href').replace('#tab','')
+        event.preventDefault();
+        return false;
+    }
+});
+ $( "#editorTab" ).sortable({
+revert: true
+});
+
+</script>
+<style>
+.treeview-menu{background:none;}</style>
