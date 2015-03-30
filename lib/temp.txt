@@ -3,3 +3,5 @@
 Err:1002 : undefined Controller
 Err:1003 : Action Undefined
 Err:1004 : missing view file
+
+<button class='btn btn-info' data-toggle='modal' data-target='#addActionModal'style='position:absolute;right:10px;top:30px;' > <span class='glyphicon glyphicon-plus-sign'></span> Add Action</button><br/>

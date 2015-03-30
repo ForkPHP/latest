@@ -91,33 +91,18 @@ $(document).ready(function(){
 								}
 								echo "<td> $value </td>";
 							}
-							/*if($id=='-')
 							{
-								echo "<td>NA</td></tr>";
-							}
-							else*/
-							{
-							//$del=$this->appBase().'/admin/entity/deleteRow/db/'.$this->view['current'].'/table/'.$this->view['tabledata'][0].'/data/'.base64_encode($updateMod);
 							$update=$id;
-							//echo "<td><a class='update_but' href='javascript:void(0)' rel='".$update."'><span class='glyphicon glyphicon-edit'></span></a> &nbsp;&nbsp; <a href='".$del."'><span class='glyphicon glyphicon-trash'></span></a></td></tr>";
+							
 							echo "<td><a class='update_but' href='javascript:fillRow(".$updateMod.")' rel='".$update."'><span class='glyphicon glyphicon-edit'></span></a> &nbsp;&nbsp; <a href='javascript:deleteRow(".$updateMod.")'><span class='glyphicon glyphicon-trash'></span></a></td></tr>";
 							}
 						}
 						echo "</table>";
-						/*echo "<script type='text/javascript'>
-								$(document).ready(function(){
-
-									$('#resultTable').dataTable();
-								});
-							 </script>";*/
+							
 					?>
 					<script type="text/javascript">
 					function fillRow(row)
 					{
-						/*alert(row)
-						row = row.trim();
-						var obj = $.parseJSON(row);*/
-
 						for (var key in row)
 						{
 							$("#col_"+key).val(row[key]);
@@ -152,25 +137,7 @@ $(document).ready(function(){
 						var id=$(this).attr("rel");
 						var table = "<?php echo $this->view['tabledata'][0]; ?>";
 						var db = "<?php echo $this->view['current']; ?>";
-						//alert(table+db);
-						/*$.ajax({
-						   type: "POST",
-						   data: {db:db,table:table,id:id},
-						   url: "<?php echo $this->appBase().'/admin/entity/getRow' ?>",
-						   success: function(data)
-						   {
-						   	data = $.parseJSON(data);
-						   	var i=0;
-							$('#editModal input[type="text"]').each(function()
-							{
-							  $(this).val(data[i]);
-							  
-							  i++;
-							});
-							}
-							});*/
-							//$("#rowID").val(id);
-						   
+						
 						});
 
 

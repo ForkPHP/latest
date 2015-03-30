@@ -32,7 +32,13 @@ class Fork_Lib
 	{
 		try
 		{
-			return file_get_contents($file);
+			$cont = @file_get_contents(str_replace("//", "/", $file));
+			if(!$cont){
+				return "File not found or Permission denided.";
+			}
+			else{
+				return $cont;
+			}
 			
 		}
 		catch(Exception $e)
@@ -44,8 +50,10 @@ class Fork_Lib
 	{
 		try
 		{
-			file_put_contents($file, $content);
-			return 1;
+			$res = @file_put_contents($file, $content);
+			if(!$res){
+				return "Permission denided to save file.";
+			}
 		}
 		catch(Exception $e)
 		{
@@ -180,7 +188,10 @@ class ModuleManager
 			$path = $_SERVER['DOCUMENT_ROOT']."/".$GLOBALS['host']."/modules/".$module."/";
 			if(!is_dir($path))
 			{
-				mkdir($path);
+				$isDir  = @mkdir($path);
+				if(!$isDir){
+					return "Permission denided to create directory. Please update directory permissions on root directory.";
+				}
 			}
 			else
 			{
@@ -266,7 +277,10 @@ class ModuleManager
 			$content = file_get_contents($_SERVER['DOCUMENT_ROOT']."/".$GLOBALS['host']."/lib/templates/controller");
 			if(!is_file($path."/controllers/".$controller."Controller.php"))
 			{
-				 $file = fopen($path."/controllers/".$controller."Controller.php","w");
+				 $file = @fopen($path."/controllers/".$controller."Controller.php","w");
+				 if(!$file){
+				 	return "Permission denided to open file.";
+				 }
 				 $code="";
 				 if($isView=="false")
 				 {

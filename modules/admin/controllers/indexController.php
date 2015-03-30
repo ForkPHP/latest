@@ -4,8 +4,7 @@
 	{
 		public function __construct()
 		{
-			//echo "I am Controller Object<br/>";
-			//echo $this->viewRequired=false;
+			
 		}
 		public function indexAction()
 		{

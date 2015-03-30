@@ -285,6 +285,9 @@ overflow: auto;
 }
 #paramCont tbody tr td:last-child
 {
-	  padding-right: 16%;
+	padding-right: 16%;
     padding-top: 12px;
+}
+.action:hover,.action.active,.action.active a,.action:hover a{
+    color: #fff;
 }

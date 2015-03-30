@@ -17,11 +17,7 @@
 		}
 		public function indexAction()
 		{
-// 			$con = new book();
-// $context = new DbContext();
-// $con = $context->Get($con); // returns entity object
-// $books= $con->Where('$book->category=="science" || $book->category=="engineering" ','$book' )->toObject(); 
-// print_r($books);die();
+
 			$this->layutRequired=true;
 
 			$modal = new Model_Admin();
@@ -64,11 +60,13 @@
 		}
 		public function loadFileAction()
 		{
-			$file = $this->post('url');
+			$file = str_replace("//", "/", $this->post('url'));
+		//	echo $file;
 			$this->viewRequired=false;
 			$this->layoutRequired=false;
 			$modal = new Model_Admin();
 			$content = $modal->getFileContent($file);
+			
 			echo $content;
 		}
 		public function saveFileAction()
